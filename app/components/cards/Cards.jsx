@@ -20,25 +20,27 @@ const Cards = () => {
     { key: "date", title: "Date", description: "" },
     { key: "time", title: "Time", description: "" },
   ]);
-
+  const [bookingMessage, setBookingMessage] = useState("");
+  
 
   const handleApplyCoupon = () => {
     if (couponCode === "LEAP25") {
       setDiscountMessage(
         "Enjoy 50% off all services during Leap Nights, valid only on February 6 and 7. The discount will be applied."
       );
+      
 
       setBookingDetails((prevDetails) =>
         prevDetails.map((detail) =>
           detail.key === "price"
             ? {
-                ...detail,
-                description: getPrice(
-                  activeCard,
-                  bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
-                  couponCode
-                ),
-              }
+              ...detail,
+              description: getPrice(
+                activeCard,
+                bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+                couponCode
+              ),
+            }
             : detail
         )
       );
@@ -46,7 +48,7 @@ const Cards = () => {
       setDiscountMessage("Invalid coupon code. Please try again.");
     }
   };
-  
+
   const times = [
     "2:00 PM",
     "3:00 PM",
@@ -72,18 +74,16 @@ const Cards = () => {
     if (!originalPrice) {
       return "";
     }
-  
+
     let totalPrice = originalPrice * count;
-  
+
     if (coupon === "LEAP25") {
       const discountedPrice = originalPrice / 2;
       return `${totalPrice} ${discountedPrice}   SAR (50% off, VAT Inc)`;
     }
-  
+
     return `${totalPrice} SAR (VAT Inclusive)`;
   };
-  
-
 
 
   const [formData, setFormData] = useState({
@@ -92,42 +92,42 @@ const Cards = () => {
     email: '',
     phone: '',
   });
-  
+
   const [formErrors, setFormErrors] = useState({
     firstName: '',
     lastName: '',
     email: '',
     phone: '',
   });
-  
+
 
   const handleCardClick = (cardType) => {
     setActiveCard(cardType);
     setBookingDetails((prevDetails) =>
       prevDetails.map((detail) =>
         detail.key === "price"
-          ? { ...detail, description: "" } 
+          ? { ...detail, description: "" }
           : detail
       )
     );
   };
 
   const handleDurationSelect = (selectedDuration) => {
-  
+
     const updatedBookingDetails = bookingDetails.map((detail) =>
       detail.key === "duration"
         ? { ...detail, description: `${selectedDuration} Mins` }
         : detail.key === "price"
-        ? {
+          ? {
             ...detail,
             description: getPrice(activeCard, selectedDuration, couponCode),
           }
-        : detail
+          : detail
     );
     console.log("Updated Booking Details:", updatedBookingDetails);
     setBookingDetails(updatedBookingDetails);
   };
-  
+
 
 
   const handleDateSelect = (selectedDate) => {
@@ -165,18 +165,18 @@ const Cards = () => {
       )
     );
   };
-  
-  
+
+
   const increaseCount = () => {
     const newCount = count + 1;
     setCount(newCount);
-  
+
     setBookingDetails((prevDetails) =>
       prevDetails.map((detail) =>
         detail.key === "no_of_people"
           ? { ...detail, description: newCount.toString() }
           : detail.key === "price"
-          ? {
+            ? {
               ...detail,
               description: getPrice(
                 activeCard,
@@ -185,22 +185,22 @@ const Cards = () => {
                 newCount
               ),
             }
-          : detail
+            : detail
       )
     );
   };
-  
+
   const decreaseCount = () => {
     if (count > 1) {
       const newCount = count - 1;
       setCount(newCount);
-  
+
       setBookingDetails((prevDetails) =>
         prevDetails.map((detail) =>
           detail.key === "no_of_people"
             ? { ...detail, description: newCount.toString() }
             : detail.key === "price"
-            ? {
+              ? {
                 ...detail,
                 description: getPrice(
                   activeCard,
@@ -209,23 +209,25 @@ const Cards = () => {
                   newCount
                 ),
               }
-            : detail
+              : detail
         )
       );
     }
   };
-  
 
-  
+
+
 
   const handleCouponCode = () => {
     if (couponCode === "LEAP25") {
       setDiscountMessage("Enjoy 50% off all services during Leap Nights, valid only on February 6 and 7. The discount will be applied once you select your sessions.");
+      setTimeout(() => {  setDiscountMessage(""); }, 3000)
     } else {
       setDiscountMessage("Invalid coupon code. Please try again.");
+      setTimeout(() => {  setDiscountMessage(""); }, 3000)
     }
   };
-  
+
 
   const handleSeatChange = (newCount) => {
     setBookingDetails((prevDetails) =>
@@ -234,7 +236,7 @@ const Cards = () => {
       )
     );
   };
-  
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -243,28 +245,74 @@ const Cards = () => {
       [name]: value,
     });
   };
-  
 
+
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.firstName) errors.firstName = "First name is required";
+    if (!formData.lastName) errors.lastName = "Last name is required";
+    if (!formData.email) errors.email = "Email is required";
+    if (!formData.phone) errors.phone = "Phone number is required";
+    return errors;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const errors = {};
+
+    const errors = validateForm();
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+    } else {
+      setFormErrors({});
+      setBookingMessage("Booking successfully submitted!"); 
+
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+      })
+
   
-    if (!formData.firstName) errors.firstName = 'First Name is required.';
-    if (!formData.lastName) errors.lastName = 'Last Name is required.';
-    if (
-      !formData.email ||
-      !/^[\w-.]+@[\w-]+\.[a-z]{2,4}$/i.test(formData.email)
-    ) {
-      errors.email = 'Please enter a valid email.';
+
+      setTimeout(() => {
+        setBookingMessage(""); 
+      }, 3000);
+
     }
-    if (!formData.phone || !/^\d{10}$/.test(formData.phone)) {
-      errors.phone = 'Please enter a valid phone number (10 digits).';
+
+    const customerEmail = formData.email;
+    const companyEmail = "info@teleiosx.com"; 
+    const bookingDetails = [
+      { title: "Booking Date", description: "2025-01-25" },
+      { title: "Service", description: "Premium Package" },
+    ];
+
+    try {
+      const response = await fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerEmail,
+          companyEmail,
+          formData,
+          bookingDetails,
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Success:", result.message);
+      } else {
+        const error = await response.json();
+        console.error("Failed to send emails:", error.error);
+      }
+    } catch (error) {
+      console.error("Error during submission:", error);
     }
-  
-  
   };
-  
+
 
   const handleContinue = () => {
     const incompleteFields = bookingDetails.filter(
@@ -272,7 +320,7 @@ const Cards = () => {
     );
     if (incompleteFields.length > 0) {
       setGeneralError("Please complete all booking details before continuing.");
-      setTimeout(()=>{setGeneralError("");}, 3000)
+      setTimeout(() => { setGeneralError(""); }, 3000)
       return;
     }
     setGeneralError("");
@@ -282,134 +330,134 @@ const Cards = () => {
 
   const renderCardDetails = () => {
     if (!activeCard) return <div>Select a booking type to see details.</div>;
- 
-        if (showBookingDetails) {
+
+    if (showBookingDetails) {
       return (
         <div className="flex">
-        <div className="mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <input
-                type="text"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleInputChange}
-                placeholder="First Name"
-                className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
-              />
-              {formErrors.firstName && (
-                <p className="text-red-500 text-sm">{formErrors.firstName}</p>
-              )}
-            </div>
+          <div className="mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
+            <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <input
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  placeholder="First Name"
+                  className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
+                />
+                {formErrors.firstName && (
+                  <p className="text-red-500 text-sm">{formErrors.firstName}</p>
+                )}
+              </div>
 
-            <div className="mb-4">
-              <input
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleInputChange}
-                placeholder="Last Name"
-                className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
-              />
-              {formErrors.lastName && (
-                <p className="text-red-500 text-sm">{formErrors.lastName}</p>
-              )}
-            </div>
+              <div className="mb-4">
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  placeholder="Last Name"
+                  className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
+                />
+                {formErrors.lastName && (
+                  <p className="text-red-500 text-sm">{formErrors.lastName}</p>
+                )}
+              </div>
 
-            <div className="mb-4">
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                placeholder="Email"
-                className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
-              />
-              {formErrors.email && (
-                <p className="text-red-500 text-sm">{formErrors.email}</p>
-              )}
-            </div>
+              <div className="mb-4">
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="Email"
+                  className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
+                />
+                {formErrors.email && (
+                  <p className="text-red-500 text-sm">{formErrors.email}</p>
+                )}
+              </div>
 
-            <div className="mb-4">
-              <input
-                type="text"
-                name="phone"
-                value={formData.phone}
-                onChange={handleInputChange}
-                placeholder="Phone Number"
-                className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
-              />
-              {formErrors.phone && (
-                <p className="text-red-500 text-sm">{formErrors.phone}</p>
-              )}
-            </div>
+              <div className="mb-4">
+                <input
+                  type="text"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  placeholder="Phone Number"
+                  className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
+                />
+                {formErrors.phone && (
+                  <p className="text-red-500 text-sm">{formErrors.phone}</p>
+                )}
+              </div>
 
-            <button
-              type="submit"
-              className="w-full h-[50px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] border-opacity-30 border-[#063828] font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300 hover:border-0"
-            >
-              Submit Booking
-            </button>
-          </form>
-        </div>
-
-      <div className="mt-6 ml-4 w-[310px] p-5 bg-white bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
-      <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
-        Booking Details
-      </h2>
-      {bookingDetails
-        .filter((detail) => detail.key !== "booking_type")
-        .map((detail) => (
-          <div
-            className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
-            key={detail.key}
-          >
-          <div className="flex justify-between"><h3 className="text-[14px] text-[#cccccc] font-bold">
-              {detail.title}
-            </h3>
-            <p className="text-[14px] text-[#cccccc]">
-            {detail.key === "price"
-              ? getPrice(
-                  activeCard,
-                  bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
-                  couponCode,
-                  count
-                )
-              : detail.description}
-        </p>
-        </div> 
+              <button
+                type="submit"
+                className="w-full  hover:translate-y-[-10px] h-[50px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] border-opacity-30 border-[#063828] font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300 hover:border-0"
+              >
+                Submit Booking
+              </button>
+            </form>
           </div>
-        ))}
+
+          <div className="mt-6 ml-4 w-[310px] p-5 bg-white bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
+            <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
+              Booking Details
+            </h2>
+            {bookingDetails
+              .filter((detail) => detail.key !== "booking_type")
+              .map((detail) => (
+                <div
+                  className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
+                  key={detail.key}
+                >
+                  <div className="flex justify-between"><h3 className="text-[14px] text-[#cccccc] font-bold">
+                    {detail.title}
+                  </h3>
+                    <p className="text-[14px] text-[#cccccc]">
+                      {detail.key === "price"
+                        ? getPrice(
+                          activeCard,
+                          bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+                          couponCode,
+                          count
+                        )
+                        : detail.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+          </div>
         </div>
-      </div>
       );
     }
 
-    if (activeCard === "normal" ) {
+    if (activeCard === "normal") {
       return (
-        
-        <div className="flex ">
+
+        <div className="xl:flex ">
           <div>
-            <div className="mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
-              <div className="flex justify-between">
+            <div className=" mt-6 lg:w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
+              <div className="flex-layout flex justify-between">
                 <div>
                   <h1 className="text-[#ccc]">Select Your Seats</h1>
                 </div>
                 <div className="flex items-center justify-center mb-4 ">
                   <button
                     onClick={decreaseCount}
-                    className=" bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                    className=" bg-gradient-to-r  hover:translate-y-[-10px] from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
                   >
                     <span className=" text-[#063828] hover:text-[#e3ce90] font-jura text-[18px] font-bold">
                       -
                     </span>
                   </button>
-                  <span className="px-8 py-2 text-[23px] text-[#e3ce90] font-jura font-bold">
+                  <span className="px-8  hover:translate-y-[-10px] py-2 text-[23px] text-[#e3ce90] font-jura font-bold">
                     {count}
                   </span>
                   <button
                     onClick={increaseCount}
-                    className=" bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                    className=" bg-gradient-to-r  hover:translate-y-[-10px] from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
                   >
                     <span className=" font-jura text-[18px] font-bold">+</span>
                   </button>
@@ -417,37 +465,36 @@ const Cards = () => {
               </div>
             </div>
             <div>
-          <div className="mt-6 w-[800px] p-5 bg-white bg-opacity-10 rounded-lg shadow-md text-center mb-5">
-            <h3>Select Your Duration</h3>
-            <div className="flex mt-[27px] gap-x-2">
-            {Object.keys(priceMapping[activeCard] || {}).map((duration) => (
-              <button
-                key={duration}
-                onClick={() => handleDurationSelect(duration)}
-                className={`w-[300px] h-[40px] px-[20px] py-[10px] ${
-                  bookingDetails.find((d) => d.key === "duration")?.description.includes(`${duration}`)
-                    ? "bg-gradient-to-r from-[#063828] to-[#002718] text-white font-bold"
-                    : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-black"
-                } rounded-lg`}
-              >
-                {duration} Mins
-              </button>
-              ))}
+              <div className="details-card mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5">
+                <h3 className="text-[#ccc]">Select Your Duration</h3>
+                <div className="flex mt-[27px] gap-x-2">
+                  {Object.keys(priceMapping[activeCard] || {}).map((duration) => (
+                    <button
+                      key={duration}
+                      onClick={() => handleDurationSelect(duration)}
+                      className={`w-[300px]  hover:translate-y-[-10px] h-[40px] px-[20px] py-[10px] ${bookingDetails.find((d) => d.key === "duration")?.description.includes(`${duration}`)
+                        ? "bg-gradient-to-r from-[#063828] to-[#002718] text-white font-bold "
+                        : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-black"
+                        } rounded-lg`}
+                    >
+                      {duration} Mins
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-            <div className="mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
+            <div className=" details-card mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md  mb-5 transition-transform transition-shadow duration-300">
               <div className="flex flex-col space-y-4 ">
                 <h1 className="text-[#ccc]">Select Date</h1>
 
                 <div className="flex justify-between w-full max-w-1280px gap-2">
-                  <button className="w-[400px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
-                   onClick={() => handleDateSelect("6 Feb")}>
+                  <button className="w-[400px] date-button hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                    onClick={() => handleDateSelect("6 Feb")}>
                     6 Feb
                   </button>
-                  <button className="w-[400px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0" 
-                   onClick={() => handleDateSelect("7 Feb")}>
+                  <button className="w-[400px] date-button selected hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                    onClick={() => handleDateSelect("7 Feb")}>
                     7 Feb
                   </button>
                 </div>
@@ -458,8 +505,8 @@ const Cards = () => {
                   {times.map((time, index) => (
                     <button
                       key={index}
-                      onClick={() => handleTimeSelect(time)} 
-                      className="w-[110px] my-2 h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                      onClick={() => handleTimeSelect(time)}
+                      className="w-[110px]  hover:translate-y-[-10px] my-2 h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
                     >
                       {time}
                     </button>
@@ -469,108 +516,108 @@ const Cards = () => {
             </div>
 
             {isFormVisible && (
-            <div className="mt-6 w-[800px] p-5 bg-[#cccccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
-              <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    placeholder="First Name"
-                    className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
-                  />
-                  {formErrors.firstName && (
-                    <p className="text-red-500 text-sm">{formErrors.firstName}</p>
-                  )}
-                </div>
+              <div className="mt-6 w-[800px] p-5 bg-[#cccccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-4">
+                    <input
+                      type="text"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                      placeholder="First Name"
+                      className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
+                    />
+                    {formErrors.firstName && (
+                      <p className="text-red-500 text-sm">{formErrors.firstName}</p>
+                    )}
+                  </div>
 
-                <div className="mb-4">
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    placeholder="Last Name"
-                    className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
-                  />
-                  {formErrors.lastName && (
-                    <p className="text-red-500 text-sm">{formErrors.lastName}</p>
-                  )}
-                </div>
+                  <div className="mb-4">
+                    <input
+                      type="text"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      placeholder="Last Name"
+                      className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
+                    />
+                    {formErrors.lastName && (
+                      <p className="text-red-500 text-sm">{formErrors.lastName}</p>
+                    )}
+                  </div>
 
-                <div className="mb-4">
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="Email"
-                    className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
-                  />
-                  {formErrors.email && (
-                    <p className="text-red-500 text-sm">{formErrors.email}</p>
-                  )}
-                </div>
+                  <div className="mb-4">
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      placeholder="Email"
+                      className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
+                    />
+                    {formErrors.email && (
+                      <p className="text-red-500 text-sm">{formErrors.email}</p>
+                    )}
+                  </div>
 
-                <div className="mb-4">
-                  <input
-                    type="text"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    placeholder="Phone Number"
-                    className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
-                  />
-                  {formErrors.phone && (
-                    <p className="text-red-500 text-sm">{formErrors.phone}</p>
-                  )}
-                </div>
+                  <div className="mb-4">
+                    <input
+                      type="text"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      placeholder="Phone Number"
+                      className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
+                    />
+                    {formErrors.phone && (
+                      <p className="text-red-500 text-sm">{formErrors.phone}</p>
+                    )}
+                  </div>
 
-                <button
-                  type="submit"
-                  className="w-full h-[50px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
-                >
-                  Submit Booking
-                </button>
-              </form>
-            </div>
-             )}
+                  <button
+                    type="submit"
+                    className="w-full hover:translate-y-[-10px] h-[50px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                  >
+                    Submit Booking
+                  </button>
+                </form>
+              </div>
+            )}
           </div>
 
           <div className="mt-6 ml-4 w-[310px] p-5 bg-white bg-opacity-10 rounded-lg shadow-md">
-          <h2 className="text-[30px] text-[#cccccc] font-black">Booking Details</h2>
-          {bookingDetails.map((detail) => (
-            <div
-              className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
-              key={detail.key}
-            >
-              <div className="flex justify-between">
-                <h3 className="text-[14px] text-[#cccccc] font-bold">
-                  {detail.title}
-                </h3>
-                <p className="text-[14px] text-[#cccccc]">{detail.description}</p>
+            <h2 className="text-[30px] text-[#cccccc] font-black">Booking Details</h2>
+            {bookingDetails.map((detail) => (
+              <div
+                className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
+                key={detail.key}
+              >
+                <div className="flex justify-between">
+                  <h3 className="text-[14px] text-[#cccccc] font-bold">
+                    {detail.title}
+                  </h3>
+                  <p className="text-[14px] text-[#cccccc]">{detail.description}</p>
+                </div>
               </div>
+            ))}
+            <div className="mt-6 flex">
+              <input
+                type="text"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value)}
+                placeholder="Enter Coupon Code"
+                className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
+              />
+              <button
+                onClick={handleApplyCoupon}
+                className="w-[100px]  hover:translate-y-[-10px] h-[44px] rounded-lg bg-gradient-to-r from-[#C09E5D] to-[#FCE6A2] text-[#063828] ml-2"
+              >
+                Apply
+              </button>
             </div>
-          ))}
-          <div className="mt-6 flex">
-          <input
-                  type="text"
-                  value={couponCode}
-                  onChange={(e) => setCouponCode(e.target.value)}
-                  placeholder="Enter Coupon Code"
-                  className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
-                />
-            <button
-              onClick={handleApplyCoupon}
-              className="w-[100px] h-[44px] rounded-lg bg-gradient-to-r from-[#C09E5D] to-[#FCE6A2] text-[#063828] ml-2"
-            >
-              Apply
-            </button>
-          </div>
-          {discountMessage && (
-                  <p className="text-[14px] mt-4 text-[#6ada2a] ">{discountMessage}</p>
-                )}
+            {discountMessage && (
+              <p className="text-[14px] mt-4 text-[#6ada2a] ">{discountMessage}</p>
+            )}
             <div className="max-w-3xl mx-auto mt-20">
               {generalError && (
                 <p className="text-[#6ada2a] text-md font-normal">
@@ -590,49 +637,48 @@ const Cards = () => {
                 </ul>
               )}
               <button
-             onClick={handleContinue}
-                className="w-full my-2 h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                onClick={handleContinue}
+                className="w-full my-2  hover:translate-y-[-10px] h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
               >
                 <span className="py-2">CONTINUE</span>
               </button>
             </div>
-        </div>
-        
+          </div>
+
         </div>
       );
     } else if (activeCard === "vip") {
       return (
-        <div className="flex">
+        <div className="xl:flex">
           <div>
-            <div className="mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
-            <h3>Select Your Duration</h3>
-            <div className="flex mt-[27px] gap-x-2">
-            {Object.keys(priceMapping[activeCard] || {}).map((duration) => (
-              <button
-                key={duration}
-                onClick={() => handleDurationSelect(duration)}
-                className={`w-[300px] h-[40px] px-[20px] py-[10px] ${
-                  bookingDetails.find((d) => d.key === "duration")?.description.includes(`${duration}`)
-                    ? "bg-gradient-to-r from-[#063828] to-[#002718] text-white font-bold"
-                    : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-black"
-                } rounded-lg`}
-              >
-                {duration} Mins
-              </button>
-              ))}
-          </div>
+            <div className=" details-card mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md  mb-5 transition-transform transition-shadow duration-300">
+              <h3 className="text-[#ccc]"> Select Your Duration</h3>
+              <div className="flex mt-[27px] gap-x-2">
+                {Object.keys(priceMapping[activeCard] || {}).map((duration) => (
+                  <button
+                    key={duration}
+                    onClick={() => handleDurationSelect(duration)}
+                    className={`w-[300px]  hover:translate-y-[-10px] h-[40px] px-[20px] py-[10px] ${bookingDetails.find((d) => d.key === "duration")?.description.includes(`${duration}`)
+                      ? "bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc] font-bold"
+                      : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-black"
+                      } rounded-lg`}
+                  >
+                    {duration} Mins
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
+            <div className="details-card mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
               <div className="flex flex-col space-y-4 ">
                 <h1 className="text-[#ccc]">Select Date</h1>
 
                 <div className="flex justify-between w-full max-w-1280px gap-2">
-                  <button className="w-[400px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
-                   onClick={() => handleDateSelect("6 Feb")}>
+                  <button className="w-[400px] hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                    onClick={() => handleDateSelect("6 Feb")}>
                     6 Feb
                   </button>
-                  <button className="w-[400px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
-                   onClick={() => handleDateSelect("7 Feb")}>
+                  <button className="w-[400px]  hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                    onClick={() => handleDateSelect("7 Feb")}>
                     7 Feb
                   </button>
                 </div>
@@ -643,8 +689,8 @@ const Cards = () => {
                   {times.map((time, index) => (
                     <button
                       key={index}
-                      onClick={() => handleTimeSelect(time)} 
-                      className="w-[110px] my-2 h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                      onClick={() => handleTimeSelect(time)}
+                      className="w-[110px]  hover:translate-y-[-10px] my-2 h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
                     >
                       {time}
                     </button>
@@ -654,122 +700,122 @@ const Cards = () => {
             </div>
 
             {isFormVisible && (
-            <div className="mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
-              <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    placeholder="First Name"
-                    className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
-                  />
-                  {formErrors.firstName && (
-                    <p className="text-red-500 text-sm">{formErrors.firstName}</p>
-                  )}
-                </div>
+              <div className="mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-4">
+                    <input
+                      type="text"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                      placeholder="First Name"
+                      className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
+                    />
+                    {formErrors.firstName && (
+                      <p className="text-red-500 text-sm">{formErrors.firstName}</p>
+                    )}
+                  </div>
 
-                <div className="mb-4">
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    placeholder="Last Name"
-                    className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
-                  />
-                  {formErrors.lastName && (
-                    <p className="text-red-500 text-sm">{formErrors.lastName}</p>
-                  )}
-                </div>
+                  <div className="mb-4">
+                    <input
+                      type="text"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      placeholder="Last Name"
+                      className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
+                    />
+                    {formErrors.lastName && (
+                      <p className="text-red-500 text-sm">{formErrors.lastName}</p>
+                    )}
+                  </div>
 
-                <div className="mb-4">
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="Email"
-                    className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
-                  />
-                  {formErrors.email && (
-                    <p className="text-red-500 text-sm">{formErrors.email}</p>
-                  )}
-                </div>
+                  <div className="mb-4">
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      placeholder="Email"
+                      className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
+                    />
+                    {formErrors.email && (
+                      <p className="text-red-500 text-sm">{formErrors.email}</p>
+                    )}
+                  </div>
 
-                <div className="mb-4">
-                  <input
-                    type="text"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    placeholder="Phone Number"
-                    className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
-                  />
-                  {formErrors.phone && (
-                    <p className="text-red-500 text-sm">{formErrors.phone}</p>
-                  )}
-                </div>
+                  <div className="mb-4">
+                    <input
+                      type="text"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      placeholder="Phone Number"
+                      className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
+                    />
+                    {formErrors.phone && (
+                      <p className="text-red-500 text-sm">{formErrors.phone}</p>
+                    )}
+                  </div>
 
-                <button
-                  type="submit"
-                  className="w-full h-[50px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
-                >
-                  Submit Booking
-                </button>
-              </form>
-            </div>
-              )}
+                  <button
+                    type="submit"
+                    className="w-full hover:translate-y-[-10px] h-[50px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                  >
+                    Submit Booking
+                  </button>
+                </form>
+              </div>
+            )}
           </div>
           <div className="mt-6 ml-4 w-[310px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
             <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
               Booking Details
             </h2>
             {bookingDetails
-            .filter((detail) => detail.key !== "booking_type" && detail.key !== "no_of_people")
+              .filter((detail) => detail.key !== "booking_type" && detail.key !== "no_of_people")
               .map((detail) => (
                 <div
                   className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
                   key={detail.key}
                 >
-                 <div className="flex justify-between"><h3 className="text-[14px] text-[#cccccc] font-bold">
+                  <div className="flex justify-between"><h3 className="text-[14px] text-[#cccccc] font-bold">
                     {detail.title}
                   </h3>
-                  <p className="text-[14px] text-[#cccccc]">
-                    {detail.key === "price"
-                      ? getPrice(
+                    <p className="text-[14px] text-[#cccccc]">
+                      {detail.key === "price"
+                        ? getPrice(
                           activeCard,
                           bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
                           couponCode,
-                          
+
                         )
-                      : detail.description}
+                        : detail.description}
                     </p>
 
-                  </div> 
+                  </div>
                 </div>
               ))}
 
-              <div className="mt-6 flex">
-                <input
-                  type="text"
-                  value={couponCode}
-                  onChange={(e) => setCouponCode(e.target.value)}
-                  placeholder="Enter Coupon Code"
-                  className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
-                />
-                <button
-                  onClick={handleCouponCode}
-                  className="w-[100px] h-[44px] rounded-lg bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] font-jura text-[14px] cursor-pointer flex items-center justify-center p-2 border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300 hover:border-0"
-                >
-                  Apply
-                </button>
-               
-              </div>
-              {discountMessage && (
-                  <p className="text-[14px] mt-4 text-[#6ada2a] ">{discountMessage}</p>
-                )}
+            <div className="mt-6 flex">
+              <input
+                type="text"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value)}
+                placeholder="Enter Coupon Code"
+                className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
+              />
+              <button
+                onClick={handleCouponCode}
+                className="w-[100px] h-[44px]  hover:translate-y-[-10px] rounded-lg bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] font-jura text-[14px] cursor-pointer flex items-center justify-center p-2 border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300 hover:border-0"
+              >
+                Apply
+              </button>
+
+            </div>
+            {discountMessage && (
+              <p className="text-[14px] mt-4 text-[#6ada2a] ">{discountMessage}</p>
+            )}
 
             <div className="max-w-3xl mx-auto mt-20">
               {generalError && (
@@ -790,8 +836,8 @@ const Cards = () => {
                 </ul>
               )}
               <button
-              onClick={handleContinue}
-                className="w-full bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                onClick={handleContinue}
+                className="w-full bg-gradient-to-r hover:translate-y-[-10px] from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
               >
                 <span className="py-2">CONTINUE</span>
               </button>
@@ -801,41 +847,40 @@ const Cards = () => {
       );
     } else if (activeCard === "suite") {
       return (
-        <div className="flex">
+        <div className="xl:flex">
           <div>
-            <div className="mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
+            <div className="details-card mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
               <div>
                 <div>
                   <span className="text-[#ccc]">Select Your Duration</span>
                 </div>
-                <div className="flex mt-[27px] gap-x-2">
-                {Object.keys(priceMapping[activeCard] || {}).map((duration) => (
-                  <button
-                    key={duration}
-                    onClick={() => handleDurationSelect(duration)}
-                    className={`w-[300px] h-[40px] px-[20px] py-[10px] ${
-                      bookingDetails.find((d) => d.key === "duration")?.description.includes(`${duration}`)
-                        ? "bg-gradient-to-r from-[#063828] to-[#002718] text-white font-bold"
+                <div className=" duration flex mt-[27px] gap-x-2">
+                  {Object.keys(priceMapping[activeCard] || {}).map((duration) => (
+                    <button
+                      key={duration}
+                      onClick={() => handleDurationSelect(duration)}
+                      className={`w-[300px] hover:translate-y-[-10px] h-[40px] px-[20px] py-[10px] ${bookingDetails.find((d) => d.key === "duration")?.description.includes(`${duration}`)
+                        ? "bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc] font-bold"
                         : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-black"
-                    } rounded-lg`}
-                  >
-                    {duration} Mins
-                  </button>
+                        } rounded-lg`}
+                    >
+                      {duration} Mins
+                    </button>
                   ))}
                 </div>
               </div>
             </div>
-            <div className="mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
+            <div className="details-card mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
               <div className="flex flex-col space-y-4 ">
                 <h1 className="text-[#ccc]">Select Date</h1>
 
                 <div className="flex justify-between w-full max-w-1280px gap-2">
-                  <button className="w-[400px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
-                   onClick={() => handleDateSelect("7 Feb")}>
+                  <button className="w-[400px]  hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                    onClick={() => handleDateSelect("7 Feb")}>
                     6 Feb
                   </button>
-                  <button className="w-[400px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
-                   onClick={() => handleDateSelect("7 Feb")}>
+                  <button className="w-[400px]  hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                    onClick={() => handleDateSelect("7 Feb")}>
                     7 Feb
                   </button>
                 </div>
@@ -846,86 +891,86 @@ const Cards = () => {
                   {times.map((time, index) => (
                     <button
                       key={index}
-                      onClick={() => handleTimeSelect(time)} 
-                      className="w-[110px] my-2 h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                      onClick={() => handleTimeSelect(time)}
+                      className="w-[110px]  hover:translate-y-[-10px] my-2 h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
                     >
                       {time}
                     </button>
                   ))}
                 </div>
 
-                
+
               </div>
-              
+
             </div>
 
             {isFormVisible && (
-            <div className="mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
-              <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    placeholder="First Name"
-                    className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
-                  />
-                  {formErrors.firstName && (
-                    <p className="text-red-500 text-sm">{formErrors.firstName}</p>
-                  )}
-                </div>
+              <div className="mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-4">
+                    <input
+                      type="text"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                      placeholder="First Name"
+                      className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
+                    />
+                    {formErrors.firstName && (
+                      <p className="text-red-500 text-sm">{formErrors.firstName}</p>
+                    )}
+                  </div>
 
-                <div className="mb-4">
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    placeholder="Last Name"
-                    className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
-                  />
-                  {formErrors.lastName && (
-                    <p className="text-red-500 text-sm">{formErrors.lastName}</p>
-                  )}
-                </div>
+                  <div className="mb-4">
+                    <input
+                      type="text"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      placeholder="Last Name"
+                      className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
+                    />
+                    {formErrors.lastName && (
+                      <p className="text-red-500 text-sm">{formErrors.lastName}</p>
+                    )}
+                  </div>
 
-                <div className="mb-4">
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="Email"
-                    className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]]"
-                  />
-                  {formErrors.email && (
-                    <p className="text-red-500 text-sm">{formErrors.email}</p>
-                  )}
-                </div>
+                  <div className="mb-4">
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      placeholder="Email"
+                      className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]]"
+                    />
+                    {formErrors.email && (
+                      <p className="text-red-500 text-sm">{formErrors.email}</p>
+                    )}
+                  </div>
 
-                <div className="mb-4">
-                  <input
-                    type="text"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    placeholder="Phone Number"
-                    className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
-                  />
-                  {formErrors.phone && (
-                    <p className="text-red-500 text-sm">{formErrors.phone}</p>
-                  )}
-                </div>
+                  <div className="mb-4">
+                    <input
+                      type="text"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      placeholder="Phone Number"
+                      className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
+                    />
+                    {formErrors.phone && (
+                      <p className="text-red-500 text-sm">{formErrors.phone}</p>
+                    )}
+                  </div>
 
-                <button
-                  type="submit"
-                  className="w-full rounded-lg h-[50px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] font-jura text-[14px] cursor-pointer flex items-center justify-center px-[20px] py-[8px] border-opacity-30 border-[#063828] font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300 hover:border-0"
-                >
-                  Submit Booking
-                </button>
-              </form>
-            </div>
+                  <button
+                    type="submit"
+                    className="w-full  hover:translate-y-[-10px] rounded-lg h-[50px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] font-jura text-[14px] cursor-pointer flex items-center justify-center px-[20px] py-[8px] border-opacity-30 border-[#063828] font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300 hover:border-0"
+                  >
+                    Submit Booking
+                  </button>
+                </form>
+              </div>
             )}
           </div>
 
@@ -940,43 +985,43 @@ const Cards = () => {
                   className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
                   key={detail.key}
                 >
-                 <div className="flex justify-between"><h3 className="text-[14px] text-[#cccccc] font-bold">
+                  <div className="flex justify-between"><h3 className="text-[14px] text-[#cccccc] font-bold">
                     {detail.title}
                   </h3>
-                  <p className="text-[14px] text-[#cccccc]">
-                    {detail.key === "price"
-                      ? getPrice(
+                    <p className="text-[14px] text-[#cccccc]">
+                      {detail.key === "price"
+                        ? getPrice(
                           activeCard,
                           bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
                           couponCode,
-                         
+
                         )
-                      : detail.description}
+                        : detail.description}
                     </p>
 
-                  </div> 
+                  </div>
                 </div>
               ))}
 
             <div className="mt-6 flex">
-                <input
-                  type="text"
-                  value={couponCode}
-                  onChange={(e) => setCouponCode(e.target.value)}
-                  placeholder="Enter Coupon Code"
-                  className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
-                />
-                <button
-                  onClick={handleCouponCode}
-                  className="w-[100px] h-[44px] rounded-lg bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] font-jura text-[14px] cursor-pointer flex items-center justify-center p-2 border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300 hover:border-0"
-                >
-                  Apply
-                </button>
-               
-              </div>
-              {discountMessage && (
-                  <p className="text-[14px] mt-4 text-[#6ada2a] ">{discountMessage}</p>
-                )}
+              <input
+                type="text"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value)}
+                placeholder="Enter Coupon Code"
+                className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
+              />
+              <button
+                onClick={handleCouponCode}
+                className="w-[100px] hover:translate-y-[-10px] h-[44px] rounded-lg bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] font-jura text-[14px] cursor-pointer flex items-center justify-center p-2 border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300 hover:border-0"
+              >
+                Apply
+              </button>
+
+            </div>
+            {discountMessage && (
+              <p className="text-[14px] mt-4 text-[#6ada2a] ">{discountMessage}</p>
+            )}
             <div className="max-w-3xl mx-auto mt-20">
               {generalError && (
                 <p className="text-red-500 text-md font-normal">
@@ -996,8 +1041,8 @@ const Cards = () => {
                 </ul>
               )}
               <button
-             onClick={handleContinue}
-                className="w-full my-2 h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                onClick={handleContinue}
+                className="w-full my-2  hover:translate-y-[-10px] h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
               >
                 <span className="py-2">CONTINUE</span>
               </button>
@@ -1010,60 +1055,57 @@ const Cards = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-6 my-20">
-    {!showBookingDetails && (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div
-        onClick={() => handleCardClick("normal")}
-        className={`p-5 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:translate-y-[-10px] hover:shadow-2xl opacity-100 w-[320px] h-[218px] flex flex-col justify-between ${
-          activeCard === "normal"
-            ? "bg-[#063828] text-[#e3ce90]" 
-            : "bg-[#ccc] bg-opacity-20 text-[#cccccc]"
-        }`}
-      >
-        <h2 className="text-[24px] font-bold mb-4">Normal</h2>
-        <p className="text-[14px] mb-4">
-          Choose a first-class VIP room where two simulators offer a premium
-          experience.
-        </p>
-        <BookNow />
-      </div>
+      {!showBookingDetails && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div
+            onClick={() => handleCardClick("normal")}
+            className={`p-5 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:translate-y-[-10px] hover:shadow-2xl opacity-100 w-[320px] h-[218px] flex flex-col justify-between ${activeCard === "normal"
+              ? "bg-[#063828] text-[#e3ce90]"
+              : "bg-[#ccc] bg-opacity-20 text-[#cccccc]"
+              }`}
+          >
+            <h2 className="text-[24px] font-bold mb-4">Normal</h2>
+            <p className="text-[14px] mb-4">
+              Choose a first-class VIP room where two simulators offer a premium
+              experience.
+            </p>
+            <BookNow />
+          </div>
 
-      <div
-        onClick={() => handleCardClick("vip")}
-        className={`p-5 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:translate-y-[-10px] hover:shadow-2xl opacity-100 w-[320px] h-[218px] flex flex-col justify-between ${
-          activeCard === "vip"
-            ? "bg-[#063828] text-[#e3ce90]" 
-            : "bg-[#ccc] bg-opacity-20 text-[#cccccc]" 
-        }`}
-      >
-        <h2 className="text-[24px] font-bold mb-4">VIP</h2>
-        <p className="text-[14px] mb-4">
-          Choose a first-class VIP room where two simulators offer a premium
-          experience.
-        </p>
-        <BookNow />
-      </div>
+          <div
+            onClick={() => handleCardClick("vip")}
+            className={`p-5 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:translate-y-[-10px] hover:shadow-2xl opacity-100 w-[320px] h-[218px] flex flex-col justify-between ${activeCard === "vip"
+              ? "bg-[#063828] text-[#e3ce90]"
+              : "bg-[#ccc] bg-opacity-20 text-[#cccccc]"
+              }`}
+          >
+            <h2 className="text-[24px] font-bold mb-4">VIP</h2>
+            <p className="text-[14px] mb-4">
+              Choose a first-class VIP room where two simulators offer a premium
+              experience.
+            </p>
+            <BookNow />
+          </div>
 
-      <div
-        onClick={() => handleCardClick("suite")}
-        className={`p-5 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:translate-y-[-10px] hover:shadow-2xl opacity-100 w-[320px] h-[218px] flex flex-col justify-between ${
-          activeCard === "suite"
-            ? "bg-[#063828] text-[#e3ce90]"
-            : "bg-[#ccc] bg-opacity-20 text-[#cccccc]" 
-        }`}
-      >
-        <h2 className="text-[24px] font-bold mb-4">Suite</h2>
-        <p className="text-[14px] mb-4">
-          Indulge in a luxurious lounge room with premium features and ambiance
-          for you and your friends.
-        </p>
-        <BookNow />
-      </div>
-      </div>
-    )}
+          <div
+            onClick={() => handleCardClick("suite")}
+            className={`p-5 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:translate-y-[-10px] hover:shadow-2xl opacity-100 w-[320px] h-[218px] flex flex-col justify-between ${activeCard === "suite"
+              ? "bg-[#063828] text-[#e3ce90]"
+              : "bg-[#ccc] bg-opacity-20 text-[#cccccc]"
+              }`}
+          >
+            <h2 className="text-[24px] font-bold mb-4">Suite</h2>
+            <p className="text-[14px] mb-4">
+              Indulge in a luxurious lounge room with premium features and ambiance
+              for you and your friends.
+            </p>
+            <BookNow />
+          </div>
+        </div>
+      )}
 
-    {activeCard && renderCardDetails()}
-  </div>
+      {activeCard && renderCardDetails()}
+    </div>
   );
 };
 

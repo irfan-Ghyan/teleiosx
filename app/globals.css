@@ -20,4 +20,42 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.date-button {
+  padding: 10px 20px;
+  background: linear-gradient(90deg, rgba(192, 158, 93, 1) 0%, rgba(252, 230, 162, 1) 50%);
+  border: none;
+  border-radius: 8px;
+  color: rgba(6, 56, 40, 1);
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.3s, background 0.3s;
+}
 
+.date-button .selected {
+  background: linear-gradient(90deg, rgba(6, 56, 40, 1) 0%, rgba(0, 39, 24, 1) 50%) !important;
+  color: #ccc;
+  font-weight: bold;
+}
+
+@media (max-width: 480px) {
+  .experience-card, .details-card {
+      width: 100%;
+      max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .flex-layout {
+      flex-direction: column;
+      gap: 2px;
+      width: 100%;
+      max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+   .details-card {
+      width: 100%;
+      max-width: 400px;
+  }
+}
