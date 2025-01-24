@@ -1,7 +1,3 @@
-
-
-
-
 "use client";
 
 import React, { useState } from "react";
@@ -65,32 +61,27 @@ const Cards = () => {
     "1:00 AM",
   ];
   const priceMapping = {
-    normal: { 20: 95, 60: 170, 90: 250 },
+    normal: { 20: 95, 40: 170, 60: 250 },
     vip: { 60: 400, 90: 500, 120: 650 },
     suite: { 60: 800, 90: 1000, 120: 1200 },
   };
 
-  const getPrice = (activeCard, duration, coupon) => {
-
-    
-    const _price_mapping = {
-      normal: { 20: 95, 60: 170, 90: 250 },
-      vip: { 60: 400, 90: 500, 120: 650 },
-      suite: { 60: 800, 90: 1000, 120: 1200 },
-    };
-    const originalPrice = _price_mapping[activeCard]?.[duration];
-    debugger;
+  const getPrice = (activeCard, duration, coupon, count = 1) => {
+    const originalPrice = priceMapping[activeCard]?.[duration];
     if (!originalPrice) {
-      return "No price here";
+      return "No price available";
     }
+  
+    let totalPrice = originalPrice * count;
   
     if (coupon === "LEAP25") {
       const discountedPrice = originalPrice / 2;
-      return `${originalPrice} ${discountedPrice} SAR (50% off, VAT Inclusive)`;
+      return `${totalPrice} ${discountedPrice}   SAR (50% off, VAT Inc)`;
     }
   
-    return `${originalPrice} SAR (VAT Inclusive)`;
+    return `${totalPrice} SAR (VAT Inclusive)`;
   };
+  
   
   
   
@@ -179,28 +170,51 @@ const Cards = () => {
   const increaseCount = () => {
     const newCount = count + 1;
     setCount(newCount);
+  
     setBookingDetails((prevDetails) =>
       prevDetails.map((detail) =>
         detail.key === "no_of_people"
           ? { ...detail, description: newCount.toString() }
+          : detail.key === "price"
+          ? {
+              ...detail,
+              description: getPrice(
+                activeCard,
+                prevDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+                couponCode,
+                newCount
+              ),
+            }
           : detail
       )
     );
   };
-
+  
   const decreaseCount = () => {
     if (count > 1) {
       const newCount = count - 1;
       setCount(newCount);
+  
       setBookingDetails((prevDetails) =>
         prevDetails.map((detail) =>
           detail.key === "no_of_people"
             ? { ...detail, description: newCount.toString() }
+            : detail.key === "price"
+            ? {
+                ...detail,
+                description: getPrice(
+                  activeCard,
+                  prevDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+                  couponCode,
+                  newCount
+                ),
+              }
             : detail
         )
       );
     }
   };
+  
 
   
 
@@ -248,37 +262,7 @@ const Cards = () => {
       errors.phone = 'Please enter a valid phone number (10 digits).';
     }
   
-    if (Object.keys(errors).length > 0) {
-      setFormErrors(errors);
-    } else {
-      const emailData = {
-        customerEmail: formData.email,
-        companyEmail: 'irfanghyann@gmail.com', // Your email
-        formData,
-        bookingDetails,
-      };
   
-      try {
-        const response = await fetch('/api/send-email', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(emailData),
-        });
-  
-        if (response.ok) {
-          console.log('Emails sent successfully!');
-          alert('Booking confirmed! Check your email for details.');
-        } else {
-          console.error('Failed to send emails');
-          alert('Something went wrong. Please try again.');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred. Please try again.');
-      }
-    }
   };
   
 
@@ -383,8 +367,16 @@ const Cards = () => {
               {detail.title}
             </h3>
             <p className="text-[14px] text-[#cccccc]">
-              {detail.key === "price" ? getPrice() : detail.description}
-            </p></div> 
+            {detail.key === "price"
+              ? getPrice(
+                  activeCard,
+                  bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+                  couponCode,
+                  count
+                )
+              : detail.description}
+        </p>
+        </div> 
           </div>
         ))}
         </div>
@@ -576,7 +568,7 @@ const Cards = () => {
             </button>
           </div>
           {discountMessage && (
-                  <p className="text-[14px] mt-4 text-red-500 ">{discountMessage}</p>
+                  <p className="text-[14px] mt-4 text-[#6ada2a] ">{discountMessage}</p>
                 )}
             <div className="max-w-3xl mx-auto mt-20">
               {generalError && (
@@ -744,8 +736,17 @@ const Cards = () => {
                     {detail.title}
                   </h3>
                   <p className="text-[14px] text-[#cccccc]">
-                  {detail.key === "price" ? getPrice(activeCard, couponCode) : detail.description}
-                  </p></div> 
+                    {detail.key === "price"
+                      ? getPrice(
+                          activeCard,
+                          bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+                          couponCode,
+                          
+                        )
+                      : detail.description}
+                    </p>
+
+                  </div> 
                 </div>
               ))}
 
@@ -766,7 +767,7 @@ const Cards = () => {
                
               </div>
               {discountMessage && (
-                  <p className="text-[14px] mt-4 text-red-500 ">{discountMessage}</p>
+                  <p className="text-[14px] mt-4 text-[#6ada2a] ">{discountMessage}</p>
                 )}
 
             <div className="max-w-3xl mx-auto mt-20">
@@ -942,8 +943,17 @@ const Cards = () => {
                     {detail.title}
                   </h3>
                   <p className="text-[14px] text-[#cccccc]">
-                  {detail.key === "price" ? getPrice(activeCard, couponCode) : detail.description}
-                  </p></div> 
+                    {detail.key === "price"
+                      ? getPrice(
+                          activeCard,
+                          bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+                          couponCode,
+                         
+                        )
+                      : detail.description}
+                    </p>
+
+                  </div> 
                 </div>
               ))}
 
@@ -964,7 +974,7 @@ const Cards = () => {
                
               </div>
               {discountMessage && (
-                  <p className="text-[14px] mt-4 text-red-500 ">{discountMessage}</p>
+                  <p className="text-[14px] mt-4 text-[#6ada2a] ">{discountMessage}</p>
                 )}
             <div className="max-w-3xl mx-auto mt-20">
               {generalError && (
