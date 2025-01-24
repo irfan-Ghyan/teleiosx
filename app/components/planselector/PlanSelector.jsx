@@ -32,9 +32,9 @@ const PlanSelector = ({ onPlanChange }) => {
           <button
             key={plan}
             onClick={() => handlePlanChange(plan)}
-            className={`w-[200px] h-[55px] px-[20px] py-[10px] font-jura text-[16px] cursor-pointer 
+            className={`w-[300px] h-[30px] px-[20px] py-[10px] font-jura text-[16px] cursor-pointer 
               ${selectedPlan === plan
-                ? 'bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc] font-bold rounded-tl-lg rounded-br-lg'
+                ? 'bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc] font-bold rounded-lg'
                 : 'bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828] rounded-[8px] border-none transition-all duration-300'}
             `}
           >

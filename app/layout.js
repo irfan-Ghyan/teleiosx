@@ -20,10 +20,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
+    
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      > 
         <div className="relative min-h-screen flex flex-col">
           <video
             autoPlay
@@ -34,7 +35,7 @@ export default function RootLayout({ children }) {
             <source src="/assets/video/dome.webm" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
-          <div className="absolute top-0 left-0 w-full h-full bg-[#063828] bg-opacity-80 z-0"></div>
+          <div className="absolute top-0 left-0 w-full h-full bg-[#07251c] bg-opacity-80 z-0"></div>
           <div className="relative z-10 flex flex-col flex-grow text-white">
             <Header />
             <main className="flex-grow">{children}</main>

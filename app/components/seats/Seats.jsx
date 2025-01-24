@@ -1,49 +1,51 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-const Seats = ({ onPlanChange }) => {
-  const [selectedPlan, setSelectedPlan] = useState('bronze');
+const Seats = () => {
+  const [count, setCount] = useState(1);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
 
-  const handlePlanChange = (plan) => {
-    setSelectedPlan(plan);
-    let duration = 20;
+  const increaseCount = async () => {
+    const newCount = count + 1;
 
-    switch (plan) {
-      case 'bronze':
-        duration = 20;
-        break;
-      case 'silver':
-        duration = 40;
-        break;
-      case 'gold':
-        duration = 60;
-        break;
-      default:
-        duration = 20;
-    }
 
-    onPlanChange(duration);
+      setCount(newCount);
+
+
+    } 
+  
+  const decreaseCount = async () => {
+
+      const newCount = count - 1;
+      setCount(newCount);
+
   };
 
   return (
-    <div>
-        <div><span>Select Your Duration</span></div>
-      <div className="flex mt-[27px] gap-x-2">
-        {['bronze', 'silver', 'gold'].map((plan) => (
-          <button
-            key={plan}
-            onClick={() => handlePlanChange(plan)}
-            className={`w-[200px] h-[55px] px-[20px] py-[10px] font-jura text-[16px] cursor-pointer 
-              ${selectedPlan === plan
-                ? 'bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc] font-bold rounded-tl-lg rounded-br-lg'
-                : 'bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828] rounded-[8px] border-none transition-all duration-300'}
-            `}
-          >
-            <span className="font-jura font-normal md:font-bold">
-              {plan === 'bronze' ? '20 Mins' : plan === 'silver' ? '40 Mins' : '60 Mins'}
-            </span>
-          </button>
-        ))}
-
+    <div className="flex justify-between">
+      <div>
+        <h1>Select Your Seats</h1>
+      </div>
+      <div className="flex items-center justify-center mb-4 ">
+        <button
+          onClick={decreaseCount}
+          className=" bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+        >
+          <span className=" text-[#063828] hover:text-[#e3ce90] font-jura text-[18px] font-bold">
+            -
+          </span>
+        </button>
+        <span className="px-8 py-2 text-[23px] text-[#063828] font-jura font-black">
+          {count}
+        </span>
+        <button
+          onClick={increaseCount}
+          className=" bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+        >
+          <span className=" font-jura text-[18px] font-bold">
+            +
+          </span>
+        </button>
       </div>
     </div>
   );
