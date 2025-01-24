@@ -21,6 +21,7 @@ const Cards = () => {
     { key: "time", title: "Time", description: "" },
   ]);
 
+
   const handleApplyCoupon = () => {
     if (couponCode === "LEAP25") {
       setDiscountMessage(
@@ -69,7 +70,7 @@ const Cards = () => {
   const getPrice = (activeCard, duration, coupon, count = 1) => {
     const originalPrice = priceMapping[activeCard]?.[duration];
     if (!originalPrice) {
-      return "No price available";
+      return "";
     }
   
     let totalPrice = originalPrice * count;
@@ -82,9 +83,8 @@ const Cards = () => {
     return `${totalPrice} SAR (VAT Inclusive)`;
   };
   
-  
-  
-  
+
+
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -272,6 +272,7 @@ const Cards = () => {
     );
     if (incompleteFields.length > 0) {
       setGeneralError("Please complete all booking details before continuing.");
+      setTimeout(()=>{setGeneralError("");}, 3000)
       return;
     }
     setGeneralError("");
@@ -572,7 +573,7 @@ const Cards = () => {
                 )}
             <div className="max-w-3xl mx-auto mt-20">
               {generalError && (
-                <p className="text-red-500 text-md font-normal">
+                <p className="text-[#6ada2a] text-md font-normal">
                   {generalError}
                 </p>
               )}
@@ -1012,40 +1013,52 @@ const Cards = () => {
     {!showBookingDetails && (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         <div
-          onClick={() => handleCardClick("normal")}
-          className="bg-[#ccc] p-5 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:translate-y-[-10px] hover:shadow-2xl opacity-100 w-[320px] h-[218px] bg-opacity-20 flex flex-col justify-between"
-        >
-          <h2 className="text-[24px] font-bold text-[#cccccc] mb-4">Normal</h2>
-          <p className="text-[14px] text-[#cccccc] mb-4">
-            Choose a first-class VIP room where two simulators offer a premium
-            experience.
-          </p>
-          <BookNow />
-        </div>
+        onClick={() => handleCardClick("normal")}
+        className={`p-5 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:translate-y-[-10px] hover:shadow-2xl opacity-100 w-[320px] h-[218px] flex flex-col justify-between ${
+          activeCard === "normal"
+            ? "bg-[#063828] text-[#e3ce90]" 
+            : "bg-[#ccc] bg-opacity-20 text-[#cccccc]"
+        }`}
+      >
+        <h2 className="text-[24px] font-bold mb-4">Normal</h2>
+        <p className="text-[14px] mb-4">
+          Choose a first-class VIP room where two simulators offer a premium
+          experience.
+        </p>
+        <BookNow />
+      </div>
 
-        <div
-          onClick={() => handleCardClick("vip")}
-          className="bg-[#ccc] p-5 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:translate-y-[-10px] hover:shadow-2xl opacity-100 w-[320px] h-[218px] bg-opacity-20 flex flex-col justify-between"
-        >
-          <h2 className="text-[24px] font-bold text-[#cccccc] mb-4">VIP</h2>
-          <p className="text-[14px] text-[#cccccc] mb-4">
-            Choose a first-class VIP room where two simulators offer a premium
-            experience.
-          </p>
-          <BookNow />
-        </div>
+      <div
+        onClick={() => handleCardClick("vip")}
+        className={`p-5 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:translate-y-[-10px] hover:shadow-2xl opacity-100 w-[320px] h-[218px] flex flex-col justify-between ${
+          activeCard === "vip"
+            ? "bg-[#063828] text-[#e3ce90]" 
+            : "bg-[#ccc] bg-opacity-20 text-[#cccccc]" 
+        }`}
+      >
+        <h2 className="text-[24px] font-bold mb-4">VIP</h2>
+        <p className="text-[14px] mb-4">
+          Choose a first-class VIP room where two simulators offer a premium
+          experience.
+        </p>
+        <BookNow />
+      </div>
 
-        <div
-          onClick={() => handleCardClick("suite")}
-          className="bg-[#ccc] p-5 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:translate-y-[-10px] hover:shadow-2xl opacity-100 w-[320px] h-[218px] bg-opacity-20 flex flex-col justify-between"
-        >
-          <h2 className="text-[24px] font-bold text-[#cccccc] mb-4">Suite</h2>
-          <p className="text-[14px] text-[#cccccc] mb-4">
-            Indulge in a luxurious lounge room with premium features and
-            ambiance for you and your friends.
-          </p>
-          <BookNow />
-        </div>
+      <div
+        onClick={() => handleCardClick("suite")}
+        className={`p-5 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:translate-y-[-10px] hover:shadow-2xl opacity-100 w-[320px] h-[218px] flex flex-col justify-between ${
+          activeCard === "suite"
+            ? "bg-[#063828] text-[#e3ce90]"
+            : "bg-[#ccc] bg-opacity-20 text-[#cccccc]" 
+        }`}
+      >
+        <h2 className="text-[24px] font-bold mb-4">Suite</h2>
+        <p className="text-[14px] mb-4">
+          Indulge in a luxurious lounge room with premium features and ambiance
+          for you and your friends.
+        </p>
+        <BookNow />
+      </div>
       </div>
     )}
 
