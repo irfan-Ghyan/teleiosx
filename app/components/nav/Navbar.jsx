@@ -10,9 +10,10 @@ const Navbar = () => {
         <Image
           src="/assets/images/logo.png" 
           alt="Logo"
-          width={164} 
+          width={164}
           height={122} 
           className='h-[122px]'
+          priority={true}
         />
         </Link>
         <span className='mx-4 my-12'>|</span>
@@ -22,6 +23,7 @@ const Navbar = () => {
           width={164} 
           height={90} 
           className='h-[90px] mt-4'
+          priority={true}
 
         />
       </div>

@@ -272,6 +272,7 @@ const Cards = () => {
     const errors = validateForm();
 
     if (Object.keys(errors).length > 0) {
+      setSuccessMessage('Booking successfully submitted!');
       setFormErrors(errors);
     } else {
       setFormErrors({});
@@ -296,7 +297,7 @@ const Cards = () => {
     }
  
     const customerEmail = formData.email;
-    const companyEmail = "info@teleiosx.com";  //make this come from env
+    const companyEmail = "info@teleiosx.com";
 
 
     try {
