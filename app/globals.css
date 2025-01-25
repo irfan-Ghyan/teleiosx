@@ -37,6 +37,7 @@ body {
   font-weight: bold;
 }
 
+
 @media (max-width: 480px) {
   .experience-card, .details-card {
       width: 100%;
@@ -58,4 +59,12 @@ body {
       width: 100%;
       max-width: 400px;
   }
+}
+
+
+
+@media (max-width: 1024px) {
+  .direction-card {
+     flex-direction: column;
+ }
 }

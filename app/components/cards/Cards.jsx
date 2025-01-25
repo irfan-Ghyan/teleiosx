@@ -438,7 +438,7 @@ const Cards = () => {
 
         <div className="xl:flex ">
           <div>
-            <div className=" mt-6 lg:w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
+            <div className=" mt-6 w-auto p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
               <div className="flex-layout flex justify-between">
                 <div>
                   <h1 className="text-[#ccc]">Select Your Seats</h1>
@@ -465,14 +465,14 @@ const Cards = () => {
               </div>
             </div>
             <div>
-              <div className="details-card mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5">
+              <div className="details-card mt-6 w-auto p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5">
                 <h3 className="text-[#ccc]">Select Your Duration</h3>
-                <div className="flex mt-[27px] gap-x-2">
+                <div className="xl:flex mt-[27px] gap-x-2">
                   {Object.keys(priceMapping[activeCard] || {}).map((duration) => (
                     <button
                       key={duration}
                       onClick={() => handleDurationSelect(duration)}
-                      className={`w-[300px]  hover:translate-y-[-10px] h-[40px] px-[20px] py-[10px] ${bookingDetails.find((d) => d.key === "duration")?.description.includes(`${duration}`)
+                      className={`w-full hover:translate-y-[-10px] h-[40px] my-2 xl:my-0 px-[20px] py-[10px] ${bookingDetails.find((d) => d.key === "duration")?.description.includes(`${duration}`)
                         ? "bg-gradient-to-r from-[#063828] to-[#002718] text-white font-bold "
                         : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-black"
                         } rounded-lg`}
@@ -484,16 +484,16 @@ const Cards = () => {
               </div>
             </div>
 
-            <div className=" details-card mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md  mb-5 transition-transform transition-shadow duration-300">
+            <div className=" details-card mt-6 w-auto p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md  mb-5 transition-transform transition-shadow duration-300">
               <div className="flex flex-col space-y-4 ">
                 <h1 className="text-[#ccc]">Select Date</h1>
 
                 <div className="flex justify-between w-full max-w-1280px gap-2">
-                  <button className="w-[400px] date-button hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                  <button className="w-full react-calendar__tile--active date-button hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
                     onClick={() => handleDateSelect("6 Feb")}>
                     6 Feb
                   </button>
-                  <button className="w-[400px] date-button selected hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                  <button className="w-full date-button selected hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
                     onClick={() => handleDateSelect("7 Feb")}>
                     7 Feb
                   </button>
@@ -516,7 +516,7 @@ const Cards = () => {
             </div>
 
             {isFormVisible && (
-              <div className="mt-6 w-[800px] p-5 bg-[#cccccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
+              <div className="mt-6 w-auto p-5 bg-[#cccccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
                 <form onSubmit={handleSubmit}>
                   <div className="mb-4">
                     <input
@@ -585,7 +585,7 @@ const Cards = () => {
             )}
           </div>
 
-          <div className="mt-6 ml-4 w-[310px] p-5 bg-white bg-opacity-10 rounded-lg shadow-md">
+          <div className="mt-6 xl:ml-4 w-[310px] p-5 bg-white bg-opacity-10 rounded-lg shadow-md">
             <h2 className="text-[30px] text-[#cccccc] font-black">Booking Details</h2>
             {bookingDetails.map((detail) => (
               <div
@@ -651,14 +651,14 @@ const Cards = () => {
       return (
         <div className="xl:flex">
           <div>
-            <div className=" details-card mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md  mb-5 transition-transform transition-shadow duration-300">
+            <div className=" details-card mt-6 w-auto p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md  mb-5 transition-transform transition-shadow duration-300">
               <h3 className="text-[#ccc]"> Select Your Duration</h3>
-              <div className="flex mt-[27px] gap-x-2">
+              <div className="xl:flex mt-[27px] gap-x-2">
                 {Object.keys(priceMapping[activeCard] || {}).map((duration) => (
                   <button
                     key={duration}
                     onClick={() => handleDurationSelect(duration)}
-                    className={`w-[300px]  hover:translate-y-[-10px] h-[40px] px-[20px] py-[10px] ${bookingDetails.find((d) => d.key === "duration")?.description.includes(`${duration}`)
+                    className={`w-full hover:translate-y-[-10px] h-[40px] my-2 xl:my-0 px-[20px] py-[10px] ${bookingDetails.find((d) => d.key === "duration")?.description.includes(`${duration}`)
                       ? "bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc] font-bold"
                       : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-black"
                       } rounded-lg`}
@@ -668,16 +668,16 @@ const Cards = () => {
                 ))}
               </div>
             </div>
-            <div className="details-card mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
+            <div className="details-card mt-6 w-auto p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
               <div className="flex flex-col space-y-4 ">
                 <h1 className="text-[#ccc]">Select Date</h1>
 
                 <div className="flex justify-between w-full max-w-1280px gap-2">
-                  <button className="w-[400px] hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                  <button className="w-full hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
                     onClick={() => handleDateSelect("6 Feb")}>
                     6 Feb
                   </button>
-                  <button className="w-[400px]  hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                  <button className="w-full hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
                     onClick={() => handleDateSelect("7 Feb")}>
                     7 Feb
                   </button>
@@ -700,7 +700,7 @@ const Cards = () => {
             </div>
 
             {isFormVisible && (
-              <div className="mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
+              <div className="mt-6 w-auto p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
                 <form onSubmit={handleSubmit}>
                   <div className="mb-4">
                     <input
@@ -768,7 +768,7 @@ const Cards = () => {
               </div>
             )}
           </div>
-          <div className="mt-6 ml-4 w-[310px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
+          <div className="mt-6 xl:ml-4 w-[310px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
             <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
               Booking Details
             </h2>
@@ -837,7 +837,7 @@ const Cards = () => {
               )}
               <button
                 onClick={handleContinue}
-                className="w-full bg-gradient-to-r hover:translate-y-[-10px] from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                className="w-full my-2  hover:translate-y-[-10px] h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
               >
                 <span className="py-2">CONTINUE</span>
               </button>
@@ -849,17 +849,17 @@ const Cards = () => {
       return (
         <div className="xl:flex">
           <div>
-            <div className="details-card mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
+            <div className="details-card mt-6 w-auto p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
               <div>
                 <div>
                   <span className="text-[#ccc]">Select Your Duration</span>
                 </div>
-                <div className=" duration flex mt-[27px] gap-x-2">
+                <div className=" duration xl:flex mt-[27px] gap-x-2">
                   {Object.keys(priceMapping[activeCard] || {}).map((duration) => (
                     <button
                       key={duration}
                       onClick={() => handleDurationSelect(duration)}
-                      className={`w-[300px] hover:translate-y-[-10px] h-[40px] px-[20px] py-[10px] ${bookingDetails.find((d) => d.key === "duration")?.description.includes(`${duration}`)
+                      className={`w-full hover:translate-y-[-10px] h-[40px] my-2 xl:my-0 px-[20px] py-[10px] ${bookingDetails.find((d) => d.key === "duration")?.description.includes(`${duration}`)
                         ? "bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc] font-bold"
                         : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-black"
                         } rounded-lg`}
@@ -870,16 +870,16 @@ const Cards = () => {
                 </div>
               </div>
             </div>
-            <div className="details-card mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
+            <div className="details-card mt-6 w-auto p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
               <div className="flex flex-col space-y-4 ">
                 <h1 className="text-[#ccc]">Select Date</h1>
 
                 <div className="flex justify-between w-full max-w-1280px gap-2">
-                  <button className="w-[400px]  hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                  <button className="w-full hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
                     onClick={() => handleDateSelect("7 Feb")}>
                     6 Feb
                   </button>
-                  <button className="w-[400px]  hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                  <button className="w-full hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
                     onClick={() => handleDateSelect("7 Feb")}>
                     7 Feb
                   </button>
@@ -974,7 +974,7 @@ const Cards = () => {
             )}
           </div>
 
-          <div className="mt-6 ml-4 w-[310px] p-5 bg-[#cccccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
+          <div className="mt-6 xl:ml-4 w-[310px] p-5 bg-[#cccccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
             <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
               Booking Details
             </h2>
@@ -1054,12 +1054,12 @@ const Cards = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6 my-20">
+    <div className="max-w-7xl mx-auto p-2 my-10">
       {!showBookingDetails && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 direction-card ">
           <div
             onClick={() => handleCardClick("normal")}
-            className={`p-5 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:translate-y-[-10px] hover:shadow-2xl opacity-100 w-[320px] h-[218px] flex flex-col justify-between ${activeCard === "normal"
+            className={`p-5 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:translate-y-[-10px] hover:shadow-2xl opacity-100 w-auto flex flex-col justify-between ${activeCard === "normal"
               ? "bg-[#063828] text-[#e3ce90]"
               : "bg-[#ccc] bg-opacity-20 text-[#cccccc]"
               }`}
@@ -1074,7 +1074,7 @@ const Cards = () => {
 
           <div
             onClick={() => handleCardClick("vip")}
-            className={`p-5 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:translate-y-[-10px] hover:shadow-2xl opacity-100 w-[320px] h-[218px] flex flex-col justify-between ${activeCard === "vip"
+            className={`p-5 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:translate-y-[-10px] hover:shadow-2xl opacity-100 w-auto flex flex-col justify-between ${activeCard === "vip"
               ? "bg-[#063828] text-[#e3ce90]"
               : "bg-[#ccc] bg-opacity-20 text-[#cccccc]"
               }`}
@@ -1089,7 +1089,7 @@ const Cards = () => {
 
           <div
             onClick={() => handleCardClick("suite")}
-            className={`p-5 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:translate-y-[-10px] hover:shadow-2xl opacity-100 w-[320px] h-[218px] flex flex-col justify-between ${activeCard === "suite"
+            className={`p-5 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:translate-y-[-10px] hover:shadow-2xl opacity-100 w-auto flex flex-col justify-between ${activeCard === "suite"
               ? "bg-[#063828] text-[#e3ce90]"
               : "bg-[#ccc] bg-opacity-20 text-[#cccccc]"
               }`}
