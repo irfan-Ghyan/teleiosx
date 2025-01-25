@@ -20,9 +20,34 @@ const Cards = () => {
     { key: "date", title: "Date", description: "" },
     { key: "time", title: "Time", description: "" },
   ]);
+  const times = [
+    "2:00 PM",
+    "3:00 PM",
+    "4:00 PM",
+    "5:00 PM",
+    "6:00 PM",
+    "7:00 PM",
+    "8:00 PM",
+    "9:00 PM",
+    "10:00 PM",
+    "11:00 PM",
+    "12:00 AM",
+    "1:00 AM",
+  ];
+
+  
+  const priceMapping = {
+    normal: { 20: 95, 40: 170, 60: 250 },
+    vip: { 60: 400, 90: 500, 120: 650 },
+    suite: { 60: 800, 90: 1000, 120: 1200 },
+  };
+
   const [bookingMessage, setBookingMessage] = useState("");
   const [activeDate, setActiveDate] = useState("");
   const [activeTime, setActiveTime] = useState("");
+
+
+  
 
   const handleApplyCoupon = () => {
     if (couponCode === "LEAP25") {
@@ -54,27 +79,6 @@ const Cards = () => {
     }
   };
 
-  const times = [
-    "2:00 PM",
-    "3:00 PM",
-    "4:00 PM",
-    "5:00 PM",
-    "6:00 PM",
-    "7:00 PM",
-    "8:00 PM",
-    "9:00 PM",
-    "10:00 PM",
-    "11:00 PM",
-    "12:00 AM",
-    "1:00 AM",
-  ];
-
-  
-  const priceMapping = {
-    normal: { 20: 95, 40: 170, 60: 250 },
-    vip: { 60: 400, 90: 500, 120: 650 },
-    suite: { 60: 800, 90: 1000, 120: 1200 },
-  };
 
   const getPrice = (activeCard, duration, coupon, count = 1) => {
     const originalPrice = priceMapping[activeCard]?.[duration];
@@ -83,14 +87,16 @@ const Cards = () => {
     }
 
     let totalPrice = originalPrice * count;
+    
 
     if (coupon === "LEAP25") {
-      const discountedPrice = totalPrice / 2;
+      const discountedPrice = originalPrice / 2;
       return `${totalPrice} ${discountedPrice}   SAR (50% off, VAT Inc)`;
     }
 
     return `${totalPrice} SAR (VAT Inclusive)`;
   };
+
 
 
   const [formData, setFormData] = useState({
@@ -137,6 +143,8 @@ const Cards = () => {
 
 
 
+  
+
   const handleDateSelect = (selectedDate) => {
     setActiveDate(selectedDate);
     setBookingDetails((prevDetails) =>
@@ -148,6 +156,7 @@ const Cards = () => {
     );
   };
 
+  
 
   const handleTimeSelect = (selectedTime) => {
     setBookingDetails((prevDetails) =>
@@ -175,6 +184,8 @@ const Cards = () => {
       )
     );
   };
+
+
 
 
   const increaseCount = () => {
@@ -225,7 +236,14 @@ const Cards = () => {
     }
   };
 
-
+ 
+  const handleSeatChange = (newCount) => {
+    setBookingDetails((prevDetails) =>
+      prevDetails.map((detail) =>
+        detail.key === "no_of_people" ? { ...detail, description: newCount.toString() } : detail
+      )
+    );
+  };
 
 
   const handleCouponCode = () => {
@@ -239,14 +257,7 @@ const Cards = () => {
   };
 
 
-  const handleSeatChange = (newCount) => {
-    setBookingDetails((prevDetails) =>
-      prevDetails.map((detail) =>
-        detail.key === "no_of_people" ? { ...detail, description: newCount.toString() } : detail
-      )
-    );
-  };
-
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -299,9 +310,9 @@ const Cards = () => {
     const customerEmail = formData.email;
     const companyEmail = "info@teleiosx.com";
 
-
+    // https://leap.teleiosx.com/email/email.php
     try {
-      const response = await fetch("/api/send-email", {
+      const response = await fetch("api/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -634,6 +645,7 @@ const Cards = () => {
                           activeCard,
                           bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
                           couponCode,
+                          count
 
                         )
                         : detail.description}
