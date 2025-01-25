@@ -22,6 +22,7 @@ const Cards = () => {
   ]);
   const [bookingMessage, setBookingMessage] = useState("");
   const [activeDate, setActiveDate] = useState("");
+  const [activeTime, setActiveTime] = useState("");
 
   const handleApplyCoupon = () => {
     if (couponCode === "LEAP25") {
@@ -44,6 +45,10 @@ const Cards = () => {
             : detail
         )
       );
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } else {
       setDiscountMessage("Invalid coupon code. Please try again.");
     }
@@ -63,6 +68,8 @@ const Cards = () => {
     "12:00 AM",
     "1:00 AM",
   ];
+
+  
   const priceMapping = {
     normal: { 20: 95, 40: 170, 60: 250 },
     vip: { 60: 400, 90: 500, 120: 650 },
@@ -131,6 +138,7 @@ const Cards = () => {
 
 
   const handleDateSelect = (selectedDate) => {
+    setActiveDate(selectedDate);
     setBookingDetails((prevDetails) =>
       prevDetails.map((detail) =>
         detail.key === "date"
@@ -139,9 +147,6 @@ const Cards = () => {
       )
     );
   };
-
-
-
 
 
   const handleTimeSelect = (selectedTime) => {
@@ -155,6 +160,7 @@ const Cards = () => {
   };
 
   const handleDurationSelectVip = (selectedDuration) => {
+    setActiveTime(selectedTime);
     setBookingDetails((prevDetails) =>
       prevDetails.map((detail) =>
         detail.key === "duration" ? { ...detail, description: `${selectedDuration} Mins` } : detail
@@ -288,7 +294,7 @@ const Cards = () => {
       }, 3000);
 
     }
-    // localStorage.setItem("lastname", "Smith");
+ 
     const customerEmail = formData.email;
     const companyEmail = "info@teleiosx.com";  //make this come from env
 
@@ -311,6 +317,8 @@ const Cards = () => {
       if (response.ok) {
         const result = await response.json();
         console.log("Success:", result.message);
+
+        window.location.reload();
       } else {
         const error = await response.json();
         console.error("Failed to send emails:", error.error);
@@ -496,40 +504,44 @@ const Cards = () => {
                 <h1 className="text-[#ccc]">Select Date</h1>
 
                 <div className="flex justify-between w-full max-w-1280px gap-2">
-                <button
-        className={`w-full date-button hover:translate-y-[-10px] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold transition duration-300 ${
-          activeDate === "6 Feb"
-            ? "bg-[#063828] text-[#e3ce90]"
-            : "bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828]"
-        }`}
-        onClick={() => handleDateSelect("6 Feb")}
-      >
-        6 Feb
-      </button>
+                    <button
+                        className={`w-full date-button hover:translate-y-[-10px] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold transition duration-300 ${
+                            activeDate === "6 Feb"
+                                ? "bg-[#063828] text-[#e3ce90]"
+                                : "bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828]"
+                        }`}
+                        onClick={() => handleDateSelect("6 Feb")}
+                    >
+                        6 Feb
+                    </button>
 
-      <button
-        className={`w-full date-button hover:translate-y-[-10px] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold transition duration-300 ${
-          activeDate === "7 Feb"
-            ? "bg-[#063828] text-[#e3ce90]" 
-            : "bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828]" 
-        }`}
-        onClick={() => handleDateSelect("7 Feb")}
-      >
-        7 Feb
-      </button>
-                </div>
+                    <button
+                        className={`w-full date-button hover:translate-y-[-10px] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold transition duration-300 ${
+                            activeDate === "7 Feb"
+                                ? "bg-[#063828] text-[#e3ce90]"
+                                : "bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828]"
+                        }`}
+                        onClick={() => handleDateSelect("7 Feb")}
+                    >
+                        7 Feb
+                    </button>
+                  </div>
 
                 <h1 className="mt-4 text-[#ccc]">Select Time</h1>
 
                 <div className="flex flex-wrap w-full max-w-1280px gap-1">
                   {times.map((time, index) => (
                     <button
-                      key={index}
-                      onClick={() => handleTimeSelect(time)}
-                      className="w-[120px]  hover:translate-y-[-10px] my-2 h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
-                    >
-                      {time}
-                    </button>
+                    key={index}
+                    onClick={() => handleTimeSelect(time)}
+                    className={`w-[120px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300 ${
+                      activeTime === time
+                        ? "bg-[#063828] text-[#e3ce90]"
+                        : "bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828]"
+                    }`}
+                  >
+                    {time}
+                  </button>
                   ))}
                 </div>
               </div>
@@ -615,7 +627,7 @@ const Cards = () => {
                 <div className="flex justify-between"><h3 className="text-[14px] text-[#cccccc] font-bold">
                     {detail.title}
                   </h3>
-                    <p className="text-[14px] text-[#cccccc] text-center">
+                    <p className="text-[14px] text-[#cccccc] text-end">
                       {detail.key === "price"
                         ? getPrice(
                           activeCard,
@@ -717,12 +729,16 @@ const Cards = () => {
                 <div className="flex flex-wrap w-full max-w-1280px gap-1">
                   {times.map((time, index) => (
                     <button
-                      key={index}
-                      onClick={() => handleTimeSelect(time)}
-                      className="w-[120px]  hover:translate-y-[-10px] my-2 h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
-                    >
-                      {time}
-                    </button>
+                    key={index}
+                    onClick={() => handleTimeSelect(time)}
+                    className={`w-[120px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300 ${
+                      activeTime === time
+                        ? "bg-[#063828] text-[#e3ce90]"
+                        : "bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828]"
+                    }`}
+                  >
+                    {time}
+                  </button>
                   ))}
                 </div>
               </div>
@@ -811,7 +827,7 @@ const Cards = () => {
                   <div className="flex justify-between"><h3 className="text-[14px] text-[#cccccc] font-bold">
                     {detail.title}
                   </h3>
-                    <p className="text-[14px] text-[#cccccc]">
+                    <p className="text-[14px] text-[#cccccc] text-end">
                       {detail.key === "price"
                         ? getPrice(
                           activeCard,
@@ -905,7 +921,7 @@ const Cards = () => {
 
                 <div className="flex justify-between w-full max-w-1280px gap-2">
                   <button className="w-full hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
-                    onClick={() => handleDateSelect("7 Feb")}>
+                    onClick={() => handleDateSelect("6 Feb")}>
                     6 Feb
                   </button>
                   <button className="w-full hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
@@ -919,12 +935,16 @@ const Cards = () => {
                 <div className="flex flex-wrap w-full max-w-1280px gap-1">
                   {times.map((time, index) => (
                     <button
-                      key={index}
-                      onClick={() => handleTimeSelect(time)}
-                      className="w-[120px]  hover:translate-y-[-10px] my-2 h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
-                    >
-                      {time}
-                    </button>
+                    key={index}
+                    onClick={() => handleTimeSelect(time)}
+                    className={`w-[120px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300 ${
+                      activeTime === time
+                        ? "bg-[#063828] text-[#e3ce90]"
+                        : "bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828]"
+                    }`}
+                  >
+                    {time}
+                  </button>
                   ))}
                 </div>
 
@@ -1017,7 +1037,7 @@ const Cards = () => {
                   <div className="flex justify-between"><h3 className="text-[14px] text-[#cccccc] font-bold">
                     {detail.title}
                   </h3>
-                    <p className="text-[14px] text-[#cccccc]">
+                    <p className="text-[14px] text-[#cccccc] text-end">
                       {detail.key === "price"
                         ? getPrice(
                           activeCard,
