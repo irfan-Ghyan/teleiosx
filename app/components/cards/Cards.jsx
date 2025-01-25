@@ -21,7 +21,7 @@ const Cards = () => {
     { key: "time", title: "Time", description: "" },
   ]);
   const [bookingMessage, setBookingMessage] = useState("");
-  
+  const [activeDate, setActiveDate] = useState("");
 
   const handleApplyCoupon = () => {
     if (couponCode === "LEAP25") {
@@ -78,7 +78,7 @@ const Cards = () => {
     let totalPrice = originalPrice * count;
 
     if (coupon === "LEAP25") {
-      const discountedPrice = originalPrice / 2;
+      const discountedPrice = totalPrice / 2;
       return `${totalPrice} ${discountedPrice}   SAR (50% off, VAT Inc)`;
     }
 
@@ -139,6 +139,10 @@ const Cards = () => {
       )
     );
   };
+
+
+
+
 
   const handleTimeSelect = (selectedTime) => {
     setBookingDetails((prevDetails) =>
@@ -272,22 +276,22 @@ const Cards = () => {
         lastName: "",
         email: "",
         phone: "",
+        duration : "",
+        date : "",
+        time : "",
+        price : "",
       })
-
-  
+      
 
       setTimeout(() => {
         setBookingMessage(""); 
       }, 3000);
 
     }
-
+    // localStorage.setItem("lastname", "Smith");
     const customerEmail = formData.email;
-    const companyEmail = "info@teleiosx.com"; 
-    const bookingDetails = [
-      { title: "Booking Date", description: "2025-01-25" },
-      { title: "Service", description: "Premium Package" },
-    ];
+    const companyEmail = "info@teleiosx.com";  //make this come from env
+
 
     try {
       const response = await fetch("/api/send-email", {
@@ -299,7 +303,10 @@ const Cards = () => {
           formData,
           bookingDetails,
         }),
+        
       });
+    
+  
 
       if (response.ok) {
         const result = await response.json();
@@ -401,7 +408,7 @@ const Cards = () => {
             </form>
           </div>
 
-          <div className="mt-6 ml-4 w-[310px] p-5 bg-white bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
+          <div className="mt-6 ml-4 w-[320px] p-5 bg-white bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
             <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
               Booking Details
             </h2>
@@ -415,7 +422,7 @@ const Cards = () => {
                   <div className="flex justify-between"><h3 className="text-[14px] text-[#cccccc] font-bold">
                     {detail.title}
                   </h3>
-                    <p className="text-[14px] text-[#cccccc]">
+                    <p className="text-[14px] text-[#cccccc] ">
                       {detail.key === "price"
                         ? getPrice(
                           activeCard,
@@ -489,24 +496,37 @@ const Cards = () => {
                 <h1 className="text-[#ccc]">Select Date</h1>
 
                 <div className="flex justify-between w-full max-w-1280px gap-2">
-                  <button className="w-full react-calendar__tile--active date-button hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
-                    onClick={() => handleDateSelect("6 Feb")}>
-                    6 Feb
-                  </button>
-                  <button className="w-full date-button selected hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
-                    onClick={() => handleDateSelect("7 Feb")}>
-                    7 Feb
-                  </button>
+                <button
+        className={`w-full date-button hover:translate-y-[-10px] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold transition duration-300 ${
+          activeDate === "6 Feb"
+            ? "bg-[#063828] text-[#e3ce90]"
+            : "bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828]"
+        }`}
+        onClick={() => handleDateSelect("6 Feb")}
+      >
+        6 Feb
+      </button>
+
+      <button
+        className={`w-full date-button hover:translate-y-[-10px] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold transition duration-300 ${
+          activeDate === "7 Feb"
+            ? "bg-[#063828] text-[#e3ce90]" 
+            : "bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828]" 
+        }`}
+        onClick={() => handleDateSelect("7 Feb")}
+      >
+        7 Feb
+      </button>
                 </div>
 
                 <h1 className="mt-4 text-[#ccc]">Select Time</h1>
 
-                <div className="flex flex-wrap justify-between w-full max-w-1280px gap-1">
+                <div className="flex flex-wrap w-full max-w-1280px gap-1">
                   {times.map((time, index) => (
                     <button
                       key={index}
                       onClick={() => handleTimeSelect(time)}
-                      className="w-[110px]  hover:translate-y-[-10px] my-2 h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                      className="w-[120px]  hover:translate-y-[-10px] my-2 h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
                     >
                       {time}
                     </button>
@@ -585,19 +605,28 @@ const Cards = () => {
             )}
           </div>
 
-          <div className="mt-6 xl:ml-4 w-[310px] p-5 bg-white bg-opacity-10 rounded-lg shadow-md">
+          <div className="mt-6 xl:ml-4 w-[320px] p-5 bg-white bg-opacity-10 rounded-lg shadow-md">
             <h2 className="text-[30px] text-[#cccccc] font-black">Booking Details</h2>
             {bookingDetails.map((detail) => (
               <div
                 className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
                 key={detail.key}
               >
-                <div className="flex justify-between">
-                  <h3 className="text-[14px] text-[#cccccc] font-bold">
+                <div className="flex justify-between"><h3 className="text-[14px] text-[#cccccc] font-bold">
                     {detail.title}
                   </h3>
-                  <p className="text-[14px] text-[#cccccc]">{detail.description}</p>
-                </div>
+                    <p className="text-[14px] text-[#cccccc] text-center">
+                      {detail.key === "price"
+                        ? getPrice(
+                          activeCard,
+                          bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+                          couponCode,
+
+                        )
+                        : detail.description}
+                    </p>
+
+                  </div>
               </div>
             ))}
             <div className="mt-6 flex">
@@ -685,12 +714,12 @@ const Cards = () => {
 
                 <h1 className="text-[#ccc] mt-4">Select Time</h1>
 
-                <div className="flex flex-wrap justify-between w-full max-w-1280px gap-1">
+                <div className="flex flex-wrap w-full max-w-1280px gap-1">
                   {times.map((time, index) => (
                     <button
                       key={index}
                       onClick={() => handleTimeSelect(time)}
-                      className="w-[110px]  hover:translate-y-[-10px] my-2 h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                      className="w-[120px]  hover:translate-y-[-10px] my-2 h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
                     >
                       {time}
                     </button>
@@ -768,7 +797,7 @@ const Cards = () => {
               </div>
             )}
           </div>
-          <div className="mt-6 xl:ml-4 w-[310px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
+          <div className="mt-6 xl:ml-4 w-[320px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
             <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
               Booking Details
             </h2>
@@ -887,12 +916,12 @@ const Cards = () => {
 
                 <h1 className="mt-4 text-[#ccc]">Select Time</h1>
 
-                <div className="flex flex-wrap justify-between w-full max-w-1280px gap-1">
+                <div className="flex flex-wrap w-full max-w-1280px gap-1">
                   {times.map((time, index) => (
                     <button
                       key={index}
                       onClick={() => handleTimeSelect(time)}
-                      className="w-[110px]  hover:translate-y-[-10px] my-2 h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
+                      className="w-[120px]  hover:translate-y-[-10px] my-2 h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
                     >
                       {time}
                     </button>
@@ -974,7 +1003,7 @@ const Cards = () => {
             )}
           </div>
 
-          <div className="mt-6 xl:ml-4 w-[310px] p-5 bg-[#cccccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
+          <div className="mt-6 xl:ml-4 w-[320px] p-5 bg-[#cccccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
             <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
               Booking Details
             </h2>
