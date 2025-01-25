@@ -408,7 +408,7 @@ const Cards = () => {
             </form>
           </div>
 
-          <div className="mt-6 ml-4 w-[320px] p-5 bg-white bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
+          <div className="mt-6 ml-4 w-[330px] p-5 bg-white bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
             <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
               Booking Details
             </h2>
@@ -605,7 +605,7 @@ const Cards = () => {
             )}
           </div>
 
-          <div className="mt-6 xl:ml-4 w-[320px] p-5 bg-white bg-opacity-10 rounded-lg shadow-md">
+          <div className="mt-6 xl:ml-4 w-[330px] p-5 bg-white bg-opacity-10 rounded-lg shadow-md">
             <h2 className="text-[30px] text-[#cccccc] font-black">Booking Details</h2>
             {bookingDetails.map((detail) => (
               <div
@@ -797,7 +797,7 @@ const Cards = () => {
               </div>
             )}
           </div>
-          <div className="mt-6 xl:ml-4 w-[320px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
+          <div className="mt-6 xl:ml-4 w-[330px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
             <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
               Booking Details
             </h2>
@@ -1003,7 +1003,7 @@ const Cards = () => {
             )}
           </div>
 
-          <div className="mt-6 xl:ml-4 w-[320px] p-5 bg-[#cccccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
+          <div className="mt-6 xl:ml-4 w-[330px] p-5 bg-[#cccccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
             <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
               Booking Details
             </h2>
