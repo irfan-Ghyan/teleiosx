@@ -663,7 +663,7 @@ const Cards = () => {
                 className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
               />
               <button
-                onClick={handleApplyCoupon}
+                onClick={handleCouponCode}
                 className="w-[100px]  hover:translate-y-[-10px] h-[44px] rounded-lg bg-gradient-to-r from-[#C09E5D] to-[#FCE6A2] text-[#063828] ml-2"
               >
                 Apply
