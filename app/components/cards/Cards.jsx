@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import BookNow from "../booknow/BookNow";
-
+import Link from "next/link";
 
 const Cards = () => {
   const [activeCard, setActiveCard] = useState("");
@@ -13,6 +13,7 @@ const Cards = () => {
   const [discountMessage, setDiscountMessage] = useState("");
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [showBookingDetails, setShowBookingDetails] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(null); 
   const [bookingDetails, setBookingDetails] = useState([
     { key: "no_of_people", title: "Participants", description: "1" },
     { key: "duration", title: "Duration", description: "" },
@@ -34,8 +35,11 @@ const Cards = () => {
     "12:00 AM",
     "1:00 AM",
   ];
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  
+  const handleClose = () => {
+    setMenuOpen(false);
+  };
   const priceMapping = {
     normal: { 20: 95, 40: 170, 60: 250 },
     vip: { 60: 400, 90: 500, 120: 650 },
@@ -46,8 +50,6 @@ const Cards = () => {
   const [activeDate, setActiveDate] = useState("");
   const [activeTime, setActiveTime] = useState("");
 
-
-  
 
   const handleApplyCoupon = () => {
     if (couponCode === "LEAP25") {
@@ -300,18 +302,18 @@ const Cards = () => {
       })
       
 
-      setTimeout(() => {
-        setBookingMessage(""); 
-      }, 3000);
+      // setTimeout(() => {
+      //   setBookingMessage(""); 
+      // }, 3000);
 
     }
  
     const customerEmail = formData.email;
     const companyEmail = "info@teleiosx.com";
 
-    // https://leap.teleiosx.com/email/email.php
+    // https://leap.teleiosx.com/email/email.phpapi/send-email
     try {
-      const response = await fetch("api/send-email", {
+      const response = await fetch("https://leap.teleiosx.com/email/email.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -319,6 +321,7 @@ const Cards = () => {
           companyEmail,
           formData,
           bookingDetails,
+          name: `${formData.firstName} ${formData.lastName}`,
         }),
         
       });
@@ -328,14 +331,19 @@ const Cards = () => {
       if (response.ok) {
         const result = await response.json();
         console.log("Success:", result.message);
+        // setIsSuccess(true);
 
-        window.location.reload();
+        // window.location.reload();
       } else {
         const error = await response.json();
+        setBookingMessage("Failed to book. Please try again.");
+       
        
       }
     } catch (error) {
       console.error("Error during submission:", error);
+      setBookingMessage("An error occurred while booking. Please try again.");
+    
     }
   };
 
@@ -427,16 +435,26 @@ const Cards = () => {
             </form>
 
             {bookingMessage && (
-        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-md shadow-md text-center w-[300px]">
-            <p className="text-green-500 font-bold">{bookingMessage}</p>
-            <button
-              className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md"
-              onClick={() => setBookingMessage("")}
-            >
-              X
-            </button>
-          </div>
+        <div
+          className={`bg-white p-6 rounded-md shadow-md text-center w-[300px] py-4 mt-4 `}
+        >
+          <p
+            className={`font-normal mb-10 ${
+              isSuccess ? "text-green-500" : "text-green-500"
+            }`}
+          >
+            {bookingMessage}
+          </p>
+
+          <Link
+            href="/"
+            className={`mt-4 px-4 py-2 ${
+              isSuccess ? "bg-green-500" : "bg-green-500"
+            } text-white rounded-md`}
+            onClick={handleClose}
+          >
+            Close
+          </Link>
         </div>
       )}
           </div>
