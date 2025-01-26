@@ -156,7 +156,6 @@ const Cards = () => {
     );
   };
 
-  
 
   const handleTimeSelect = (selectedTime) => {
     setBookingDetails((prevDetails) =>
@@ -283,7 +282,7 @@ const Cards = () => {
     const errors = validateForm();
 
     if (Object.keys(errors).length > 0) {
-      setSuccessMessage('Booking successfully submitted!');
+      // setBookingMessage('Booking successfully submitted!');
       setFormErrors(errors);
     } else {
       setFormErrors({});
@@ -333,7 +332,7 @@ const Cards = () => {
         window.location.reload();
       } else {
         const error = await response.json();
-        console.error("Failed to send emails:", error.error);
+       
       }
     } catch (error) {
       console.error("Error during submission:", error);
@@ -426,9 +425,23 @@ const Cards = () => {
                 Submit Booking
               </button>
             </form>
+
+            {bookingMessage && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-md shadow-md text-center w-[300px]">
+            <p className="text-green-500 font-bold">{bookingMessage}</p>
+            <button
+              className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md"
+              onClick={() => setBookingMessage("")}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
           </div>
 
-          <div className="mt-6 ml-4 w-[330px] p-5 bg-white bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
+          <div className="mt-6 ml-4 w-[330px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
             <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
               Booking Details
             </h2>
@@ -500,8 +513,8 @@ const Cards = () => {
                       key={duration}
                       onClick={() => handleDurationSelect(duration)}
                       className={`w-full hover:translate-y-[-10px] h-[40px] my-2 xl:my-0 px-[20px] py-[10px] ${bookingDetails.find((d) => d.key === "duration")?.description.includes(`${duration}`)
-                        ? "bg-gradient-to-r from-[#063828] to-[#002718] text-white font-bold "
-                        : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-black"
+                        ? "bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc] font-bold "
+                        : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"
                         } rounded-lg`}
                     >
                       {duration} Mins
@@ -519,8 +532,8 @@ const Cards = () => {
                     <button
                         className={`w-full date-button hover:translate-y-[-10px] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold transition duration-300 ${
                             activeDate === "6 Feb"
-                                ? "bg-[#063828] text-[#e3ce90]"
-                                : "bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828]"
+                                  ? "bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc] font-bold "
+                        : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"
                         }`}
                         onClick={() => handleDateSelect("6 Feb")}
                     >
@@ -530,8 +543,8 @@ const Cards = () => {
                     <button
                         className={`w-full date-button hover:translate-y-[-10px] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold transition duration-300 ${
                             activeDate === "7 Feb"
-                                ? "bg-[#063828] text-[#e3ce90]"
-                                : "bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828]"
+                                ? "bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc] font-bold "
+                        : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"
                         }`}
                         onClick={() => handleDateSelect("7 Feb")}
                     >
@@ -548,8 +561,8 @@ const Cards = () => {
                     onClick={() => handleTimeSelect(time)}
                     className={`w-[120px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300 ${
                       activeTime === time
-                        ? "bg-[#063828] text-[#e3ce90]"
-                        : "bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828]"
+                        ? "bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc] font-bold "
+                        : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"
                     }`}
                   >
                     {time}
@@ -629,7 +642,7 @@ const Cards = () => {
             )}
           </div>
 
-          <div className="mt-6 xl:ml-4 w-[330px] p-5 bg-white bg-opacity-10 rounded-lg shadow-md">
+          <div className="mt-6 xl:ml-4 w-[330px] p-5 text-[#ccc] bg-opacity-10 rounded-lg shadow-md">
             <h2 className="text-[30px] text-[#cccccc] font-black">Booking Details</h2>
             {bookingDetails.map((detail) => (
               <div
@@ -714,7 +727,7 @@ const Cards = () => {
                     onClick={() => handleDurationSelect(duration)}
                     className={`w-full hover:translate-y-[-10px] h-[40px] my-2 xl:my-0 px-[20px] py-[10px] ${bookingDetails.find((d) => d.key === "duration")?.description.includes(`${duration}`)
                       ? "bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc] font-bold"
-                      : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-black"
+                      : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"
                       } rounded-lg`}
                   >
                     {duration} Mins
@@ -727,14 +740,27 @@ const Cards = () => {
                 <h1 className="text-[#ccc]">Select Date</h1>
 
                 <div className="flex justify-between w-full max-w-1280px gap-2">
-                  <button className="w-full hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
-                    onClick={() => handleDateSelect("6 Feb")}>
-                    6 Feb
-                  </button>
-                  <button className="w-full hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
-                    onClick={() => handleDateSelect("7 Feb")}>
-                    7 Feb
-                  </button>
+                <button
+                        className={`w-full date-button hover:translate-y-[-10px] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold transition duration-300 ${
+                            activeDate === "6 Feb"
+                                 ? "bg-gradient-to-r from-[#063828] to-[#002718] text-white font-bold "
+                        : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"
+                        }`}
+                        onClick={() => handleDateSelect("6 Feb")}
+                    >
+                        6 Feb
+                    </button>
+
+                    <button
+                        className={`w-full date-button hover:translate-y-[-10px] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold transition duration-300 ${
+                            activeDate === "7 Feb"
+                                 ? "bg-gradient-to-r from-[#063828] to-[#002718] text-white font-bold "
+                        : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"
+                        }`}
+                        onClick={() => handleDateSelect("7 Feb")}
+                    >
+                        7 Feb
+                    </button>
                 </div>
 
                 <h1 className="text-[#ccc] mt-4">Select Time</h1>
@@ -746,8 +772,8 @@ const Cards = () => {
                     onClick={() => handleTimeSelect(time)}
                     className={`w-[120px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300 ${
                       activeTime === time
-                        ? "bg-[#063828] text-[#e3ce90]"
-                        : "bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828]"
+                         ? "bg-gradient-to-r from-[#063828] to-[#002718] text-white font-bold "
+                        : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"
                     }`}
                   >
                     {time}
@@ -933,14 +959,27 @@ const Cards = () => {
                 <h1 className="text-[#ccc]">Select Date</h1>
 
                 <div className="flex justify-between w-full max-w-1280px gap-2">
-                  <button className="w-full hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
-                    onClick={() => handleDateSelect("6 Feb")}>
-                    6 Feb
-                  </button>
-                  <button className="w-full hover:translate-y-[-10px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
-                    onClick={() => handleDateSelect("7 Feb")}>
-                    7 Feb
-                  </button>
+                <button
+                        className={`w-full date-button hover:translate-y-[-10px] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold transition duration-300 ${
+                            activeDate === "6 Feb"
+                                 ? "bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc] font-bold "
+                        : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"
+                        }`}
+                        onClick={() => handleDateSelect("6 Feb")}
+                    >
+                        6 Feb
+                    </button>
+
+                    <button
+                        className={`w-full date-button hover:translate-y-[-10px] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold transition duration-300 ${
+                            activeDate === "7 Feb"
+                                 ? "bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc]font-bold "
+                        : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"
+                        }`}
+                        onClick={() => handleDateSelect("7 Feb")}
+                    >
+                        7 Feb
+                    </button>
                 </div>
 
                 <h1 className="mt-4 text-[#ccc]">Select Time</h1>
@@ -952,8 +991,8 @@ const Cards = () => {
                     onClick={() => handleTimeSelect(time)}
                     className={`w-[120px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300 ${
                       activeTime === time
-                        ? "bg-[#063828] text-[#e3ce90]"
-                        : "bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828]"
+                         ? "bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc] font-bold "
+                        : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"
                     }`}
                   >
                     {time}
