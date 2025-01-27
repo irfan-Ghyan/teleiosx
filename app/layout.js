@@ -3,26 +3,17 @@ import "./globals.css";
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 
 export default function RootLayout({ children }) {
   return (
     
     <html lang="en">
-      <title>Teleios - Leap Nights</title>
-      <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <title>Teleios - Leap Nights</title>
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+       
       > 
         <div className="relative min-h-screen flex flex-col">
           <video

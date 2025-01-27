@@ -92,14 +92,15 @@ const Cards = () => {
     if (!originalPrice) {
       return "";
     }
-
     // let totalPrice = originalPrice * count;
 
     let totalPrice = activeCard === "normal" ? originalPrice * count : originalPrice;
 
     if (coupon === "LEAP25") {
       const discountedPrice = totalPrice / 2;
-      return `${totalPrice} SAR ${discountedPrice}  (50% off, VAT Inc)`;
+      console.log(discountedPrice)
+      console.log(totalPrice)
+      return `${totalPrice} SAR ${discountedPrice}  (SAR 50% off, VAT Inc)`;
     }
 
     return `${totalPrice} SAR (VAT Inclusive)`;
@@ -137,24 +138,42 @@ const Cards = () => {
     
   };
 
+  // const handleDurationSelect = (selectedDuration) => {
+    
+
+  //   const updatedBookingDetails = bookingDetails.map((detail) =>
+  //     detail.key === "duration"
+  //       ? { ...detail, description: `${selectedDuration} Mins` }
+  //       : detail.key === "price"
+  //         ? {
+  //           ...detail,
+  //           description: getPrice(activeCard, selectedDuration, couponCode),
+  //         }
+  //         : detail
+  //   );
+  //   console.log("Updated Booking Details:", updatedBookingDetails);
+  //   setBookingDetails(updatedBookingDetails);
+  // };
+
+
   const handleDurationSelect = (selectedDuration) => {
 
+    const duration = bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0];
+    const newPrice = getPrice(activeCard, duration, couponCode);
+
+  
     const updatedBookingDetails = bookingDetails.map((detail) =>
       detail.key === "duration"
         ? { ...detail, description: `${selectedDuration} Mins` }
         : detail.key === "price"
-          ? {
-            ...detail,
-            description: getPrice(activeCard, selectedDuration, couponCode),
-          }
-          : detail
+        ? { ...detail, description: newPrice }
+        : detail
     );
-    console.log("Updated Booking Details:", updatedBookingDetails);
+   
+    setCalculatedPrice(newPrice);
     setBookingDetails(updatedBookingDetails);
   };
-
-
-
+  
   
 
   const handleDateSelect = (selectedDate) => {
@@ -180,23 +199,6 @@ const Cards = () => {
     );
   };
 
-  const handleDurationSelectVip = (selectedDuration) => {
-    setActiveTime(selectedTime);
-    setBookingDetails((prevDetails) =>
-      prevDetails.map((detail) =>
-        detail.key === "duration" ? { ...detail, description: `${selectedDuration} Mins` } : detail
-      )
-    );
-  };
-
-  const handleDurationSelectSuite = (selectedDuration) => {
-    setBookingDetails((prevDetails) =>
-      prevDetails.map((detail) =>
-        detail.key === "duration" ? { ...detail, description: `${selectedDuration} Mins` } : detail
-      )
-    );
-  };
-
 
 
 
@@ -204,74 +206,55 @@ const Cards = () => {
     if (count < 14) {
       const newCount = count + 1;
       setCount(newCount);
-  
-      // Update booking details
+
+      
       setBookingDetails((prevDetails) =>
         prevDetails.map((detail) =>
           detail.key === "no_of_people"
             ? { ...detail, description: newCount.toString() }
             : detail.key === "price"
-              ? {
-                ...detail,
-                description: getPrice(
-                  activeCard,
-                  prevDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
-                  couponCode,
-                  newCount
-                ),
-              }
-              : detail
+            ? { ...detail, description: newPrice }
+            : detail
         )
       );
-  
+      const duration = bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0];
+      const newPrice = getPrice(activeCard, duration, couponCode, newCount);
 
-      if (activeTime && times[activeTime]?.sims < newCount) {
-        setPopupMessage(`Only ${times[activeTime]?.sims || 0} seats are available for the selected time slot.`);
-        setIsPopupVisible(true);
+      setCalculatedPrice(newPrice);
   
-  
-        setTimeout(() => {
-          setIsPopupVisible(false);
-        }, 3000);
-      }
     } else {
       setPopupMessage("Maximum limit of 14 seats reached.");
       setIsPopupVisible(true);
   
-
       setTimeout(() => {
         setIsPopupVisible(false);
       }, 3000);
     }
   };
   
-
   const decreaseCount = () => {
     if (count > 1) {
       const newCount = count - 1;
       setCount(newCount);
-
+  
+  
       setBookingDetails((prevDetails) =>
         prevDetails.map((detail) =>
           detail.key === "no_of_people"
             ? { ...detail, description: newCount.toString() }
             : detail.key === "price"
-              ? {
-                ...detail,
-                description: getPrice(
-                  activeCard,
-                  prevDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
-                  couponCode,
-                  newCount
-                ),
-              }
-              : detail
+            ? { ...detail, description: newPrice }
+            : detail
         )
       );
+      const duration = bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0];
+      const newPrice = getPrice(activeCard, duration, couponCode, newCount);
+
+      setCalculatedPrice(newPrice);
     }
   };
-
- 
+  
+  
   const handleSeatChange = (newCount) => {
     setBookingDetails((prevDetails) =>
       prevDetails.map((detail) =>
@@ -284,41 +267,26 @@ const Cards = () => {
   const handleCouponCode = () => {
     const duration = bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0];
     
-    // Check if the coupon code matches
+    
     if (couponCode === "LEAP25") {
       setDiscountMessage("Enjoy 50% off all Sessions and F&B");
     } else {
       setDiscountMessage("Invalid coupon code. Please try again.");
+
       setTimeout(() => {
         setDiscountMessage("");
       }, 3000);
-      return; // Exit the function if the coupon code is invalid
+      return; 
     }
   
-    // Calculate the price and update the state if the coupon is valid
+  
     const newPrice = getPrice(activeCard, duration, couponCode, count);
     setCalculatedPrice(newPrice);
+
+    
   
   };
   
-
-  // const handleCouponCode = () => {
-  //   const duration = bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0];
-  //   const newPrice = getPrice(activeCard, duration, couponCode, count);
-  //   setCalculatedPrice(newPrice);
-  //   setDiscountMessage("Coupon Applied Successfully!");
-  // };
-
-  // const handleCouponCode = () => {
-  //   if (couponCode === "LEAP25") {
-  //     setDiscountMessage("Enjoy 50% off all services during Leap Nights.");
-  //     setTimeout(() => {  setDiscountMessage(""); }, 3000)
-  //   } else {
-  //     setDiscountMessage("Invalid coupon code. Please try again.");
-  //     setTimeout(() => {  setDiscountMessage(""); }, 3000)
-  //   }
-  // };
-
 
   
 
@@ -429,8 +397,8 @@ const Cards = () => {
 
     if (showBookingDetails) {
       return (
-        <div className="flex">
-          <div className="mt-6 w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
+        <div className="lg:flex">
+          <div className="mt-6 w-[330px] md:w-[700px] lg:w-[800px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <input
@@ -521,7 +489,7 @@ const Cards = () => {
       )}
           </div>
 
-          <div className="mt-6 ml-4 w-[330px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
+          <div className="mt-6 lg:ml-4 w-[330px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
   <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
     Booking Details
   </h2>
@@ -659,7 +627,7 @@ const Cards = () => {
     <button
       key={index}
       onClick={() => handleTimeSelect(time)}
-      className={`w-[120px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300 ${
+      className={`w-[133px] xl:w=[120px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300 ${
         activeTime === time ? "date-button-active" : "date-button-inactive"
       }`}
     >
@@ -956,7 +924,7 @@ const Cards = () => {
                     <button
                     key={index}
                     onClick={() => handleTimeSelect(time)}
-                    className={`w-[120px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300 ${
+                    className={`w-[133px] xl:w=[120px] xl:w=[120px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300  ${
                       activeTime === time
                          ? "bg-gradient-to-r from-[#063828] to-[#002718] text-white font-bold "
                         : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"
@@ -1263,7 +1231,7 @@ const Cards = () => {
                     <button
                     key={index}
                     onClick={() => handleTimeSelect(time)}
-                    className={`w-[120px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300 ${
+                    className={`w-[133px] xl:w=[120px] xl:w=[120px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300 ${
                       activeTime === time
                          ? "bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc] font-bold "
                         : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"
