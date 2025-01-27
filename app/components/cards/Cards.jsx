@@ -929,7 +929,9 @@ const Cards = () => {
             <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
               Booking Details
             </h2>
-            {bookingDetails.map((detail) => (
+            {bookingDetails
+            .filter((detail) => detail.key !== "no_of_people")
+            .map((detail) => (
     <div
       className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
       key={detail.key}
@@ -1159,10 +1161,12 @@ const Cards = () => {
             <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
               Booking Details
             </h2>
-            {bookingDetails.map((detail) => (
+            {bookingDetails
+            .filter((detail) => detail.key !== "no_of_people")
+            .map((detail) => (
     <div
       className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
-      key={detail.key}
+      key={detail.key }
     >
       <div className="flex justify-between">
         <h3 className="text-[14px] text-[#cccccc] font-bold">{detail.title}</h3>
