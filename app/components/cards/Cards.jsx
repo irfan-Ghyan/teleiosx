@@ -1350,92 +1350,84 @@ const Cards = () => {
           </div>
 
           <div className="mt-6 xl:ml-4 w-[330px] p-5 bg-[#cccccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
-            <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
-              Booking Details
-            </h2>
-            {bookingDetails
-            .filter((detail) => detail.key !== "no_of_people")
-            .map((detail) => (
-    <div
-      className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
-      key={detail.key }
-    >
-      <div className="flex justify-between">
-        <h3 className="text-[14px] text-[#cccccc] font-bold">{detail.title}</h3>
-        <p className="text-[14px] text-[#cccccc] text-end">
-          {detail.key === "price"
-            ? (() => {
-                const priceString = getPrice(
-                  activeCard,
-                  bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
-                  couponCode,
-                  count
-                );
+        <h2 className="text-[30px] text-[#cccccc] font-black">Booking Details</h2>
+        {bookingDetails
+        .filter((detail) => detail.key !== "no_of_people")
+        .map((detail) => (
+          <div
+            className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
+            key={detail.key}
+          >
+            <div className="flex justify-between">
+              <h3 className="text-[14px] text-[#cccccc] font-bold">{detail.title}</h3>
+              <p className="text-[14px] text-[#cccccc] text-end">
+                {detail.key === "price"
+                  ? (() => {
+                      const priceString = calculatedPrice || getPrice(
+                        activeCard,
+                        bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+                        "",
+                        count
+                      );
 
-                if (couponCode === "LEAP25") {
-                  // Split the string to isolate totalPrice
-                  const [totalPrice, ...rest] = priceString.split(" SAR");
-                  return (
-                    <>
-                      <span className="line-through">{`${totalPrice} SAR`}</span>
-                      <span>{` ${rest.join(" SAR")}`}</span>
-                    </>
-                  );
-                }
+                      if (couponCode === "LEAP25" && calculatedPrice) {
+                        // Split the string to isolate totalPrice
+                        const [totalPrice, ...rest] = priceString.split(" SAR");
+                        return (
+                          <>
+                            <span className="line-through">{`${totalPrice} SAR`}</span>
+                            <span>{` ${rest.join(" SAR")}`}</span>
+                          </>
+                        );
+                      }
 
-                return priceString;
-              })()
-            : detail.description}
-        </p>
-      </div>
-                </div>
-              ))}
-
-            <div className="mt-6 flex">
-              <input
-                type="text"
-                value={couponCode}
-                onChange={(e) => setCouponCode(e.target.value)}
-                placeholder="Enter Coupon Code"
-                className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
-              />
-              <button
-                onClick={handleCouponCode}
-                className="w-[100px] hover:translate-y-[-10px] h-[44px] rounded-lg bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] font-jura text-[14px] cursor-pointer flex items-center justify-center p-2 border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300 hover:border-0"
-              >
-                Apply
-              </button>
-
-            </div>
-            {discountMessage && (
-              <p className="text-[14px] mt-4 text-[#6ada2a] ">{discountMessage}</p>
-            )}
-            <div className="max-w-3xl mx-auto mt-20">
-              {generalError && (
-                <p className="text-red-500 text-md font-normal">
-                  {generalError}
-                </p>
-              )}
-              {bookingErrors.length > 0 && (
-                <ul>
-                  {bookingErrors.map((error, index) => (
-                    <li
-                      key={index}
-                      className="text-red-500 text-md font-normal "
-                    >
-                      {error}
-                    </li>
-                  ))}
-                </ul>
-              )}
-              <button
-                onClick={handleContinue}
-                className="w-full my-2  hover:translate-y-[-10px] h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px]  border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300  hover:border-0"
-              >
-                <span className="py-2">CONTINUE</span>
-              </button>
+                      return priceString;
+                    })()
+                  : detail.description}
+              </p>
             </div>
           </div>
+        ))}
+        <div className="mt-6 flex">
+          <input
+            type="text"
+            value={couponCode}
+            onChange={(e) => setCouponCode(e.target.value)}
+            placeholder="Enter Coupon Code"
+            className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
+          />
+          <button
+            onClick={handleCouponCode}
+            className="w-[100px] hover:translate-y-[-10px] h-[44px] rounded-lg bg-gradient-to-r from-[#C09E5D] to-[#FCE6A2] text-[#063828] ml-2"
+          >
+            Apply
+          </button>
+        </div>
+        {discountMessage && (
+          <p className="text-[14px] mt-4 text-[#6ada2a]">{discountMessage}</p>
+        )}
+        <div className="max-w-3xl mx-auto mt-20">
+          {generalError && (
+            <p className="text-[#6ada2a] text-md font-normal">{generalError}</p>
+          )}
+          {bookingErrors.length > 0 && (
+            <ul>
+              {bookingErrors.map((error, index) => (
+                <li key={index} className="text-red-500 text-md font-normal">
+                  {error}
+                </li>
+              ))}
+            </ul>
+          )}
+          <button
+            onClick={handleContinue}
+            className="w-full my-2 hover:translate-y-[-10px] h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300 hover:border-0"
+          >
+            <span className="py-2">CONTINUE</span>
+          </button>
+        </div>
+      </div>
+
         </div>
       );
     }
