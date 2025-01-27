@@ -36,6 +36,9 @@ const Cards = () => {
     "1:00 AM",
   ];
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isPopupVisible, setIsPopupVisible] = useState(false); 
+  const [popupMessage, setPopupMessage] = useState(""); 
+  const maxCount = 14
 
   const handleClose = () => {
     setMenuOpen(false);
@@ -93,7 +96,7 @@ const Cards = () => {
 
     if (coupon === "LEAP25") {
       const discountedPrice = originalPrice / 2;
-      return `${totalPrice} ${discountedPrice}   SAR (50% off, VAT Inc)`;
+      return `${totalPrice} SAR ${discountedPrice}  (50% off, VAT Inc)`;
     }
 
     return `${totalPrice} SAR (VAT Inclusive)`;
@@ -160,6 +163,7 @@ const Cards = () => {
 
 
   const handleTimeSelect = (selectedTime) => {
+    setActiveTime(selectedTime); 
     setBookingDetails((prevDetails) =>
       prevDetails.map((detail) =>
         detail.key === "time"
@@ -190,27 +194,50 @@ const Cards = () => {
 
 
   const increaseCount = () => {
-    const newCount = count + 1;
-    setCount(newCount);
-
-    setBookingDetails((prevDetails) =>
-      prevDetails.map((detail) =>
-        detail.key === "no_of_people"
-          ? { ...detail, description: newCount.toString() }
-          : detail.key === "price"
-            ? {
-              ...detail,
-              description: getPrice(
-                activeCard,
-                prevDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
-                couponCode,
-                newCount
-              ),
-            }
-            : detail
-      )
-    );
+    if (count < 14) {
+      const newCount = count + 1;
+      setCount(newCount);
+  
+      // Update booking details
+      setBookingDetails((prevDetails) =>
+        prevDetails.map((detail) =>
+          detail.key === "no_of_people"
+            ? { ...detail, description: newCount.toString() }
+            : detail.key === "price"
+              ? {
+                ...detail,
+                description: getPrice(
+                  activeCard,
+                  prevDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+                  couponCode,
+                  newCount
+                ),
+              }
+              : detail
+        )
+      );
+  
+      // Check seat availability
+      if (activeTime && times[activeTime]?.sims < newCount) {
+        setPopupMessage(`Only ${times[activeTime]?.sims || 0} seats are available for the selected time slot.`);
+        setIsPopupVisible(true);
+  
+        // Hide popup after 3 seconds
+        setTimeout(() => {
+          setIsPopupVisible(false);
+        }, 3000);
+      }
+    } else {
+      setPopupMessage("Maximum limit of 14 seats reached.");
+      setIsPopupVisible(true);
+  
+      // Hide popup after 3 seconds
+      setTimeout(() => {
+        setIsPopupVisible(false);
+      }, 3000);
+    }
   };
+  
 
   const decreaseCount = () => {
     if (count > 1) {
@@ -460,33 +487,49 @@ const Cards = () => {
           </div>
 
           <div className="mt-6 ml-4 w-[330px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
-            <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
-              Booking Details
-            </h2>
-            {bookingDetails
-              .filter((detail) => detail.key !== "booking_type")
-              .map((detail) => (
-                <div
-                  className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
-                  key={detail.key}
-                >
-                  <div className="flex justify-between"><h3 className="text-[14px] text-[#cccccc] font-bold">
-                    {detail.title}
-                  </h3>
-                    <p className="text-[14px] text-[#cccccc] ">
-                      {detail.key === "price"
-                        ? getPrice(
-                          activeCard,
-                          bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
-                          couponCode,
-                          count
-                        )
-                        : detail.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-          </div>
+  <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
+    Booking Details
+  </h2>
+  {bookingDetails
+    .filter((detail) => detail.key !== "booking_type")
+    .map((detail) => (
+      <div
+        className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
+        key={detail.key}
+      >
+        <div className="flex justify-between">
+          <h3 className="text-[14px] text-[#cccccc] font-bold">
+            {detail.title}
+          </h3>
+          <p className="text-[14px] text-[#cccccc]">
+            {detail.key === "price"
+              ? (() => {
+                  const priceString = getPrice(
+                    activeCard,
+                    bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+                    couponCode,
+                    count
+                  );
+
+                  if (couponCode === "LEAP25") {
+                    const [totalPrice, ...rest] = priceString.split(" SAR");
+                    return (
+                      <>
+                        <span className="line-through">{`${totalPrice} SAR`}</span>
+                        <span>{rest.join(" SAR")}</span>
+                      </>
+                    );
+                  }
+
+                  return priceString;
+                })()
+              : detail.description}
+          </p>
+        </div>
+      </div>
+    ))}
+</div>
+
         </div>
       );
     }
@@ -519,8 +562,15 @@ const Cards = () => {
                   >
                     <span className=" font-jura text-[18px] font-bold">+</span>
                   </button>
+                  
                 </div>
+                {isPopupVisible && (
+                  <div className="fixed transform mt-10 text-green-500 text-lg px-4 py-2 rounded-lg shadow-lg animate-fade-in-out">
+                    {popupMessage}
+                  </div>
+                )}
               </div>
+              
             </div>
             <div>
               <div className="details-card mt-6 w-auto p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5">
@@ -548,45 +598,41 @@ const Cards = () => {
 
                 <div className="flex justify-between w-full max-w-1280px gap-2">
                     <button
-                        className={`w-full date-button hover:translate-y-[-10px] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold transition duration-300 ${
-                            activeDate === "6 Feb"
-                                  ? "bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc] font-bold "
-                        : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"
-                        }`}
-                        onClick={() => handleDateSelect("6 Feb")}
+                      className={`w-full date-button text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold ${
+                        activeDate === "6 Feb" ? "date-button-active" : "date-button-inactive"
+                      }`}
+                      onClick={() => handleDateSelect("6 Feb")}
                     >
-                        6 Feb
+                      6 Feb
                     </button>
 
                     <button
-                        className={`w-full date-button hover:translate-y-[-10px] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold transition duration-300 ${
-                            activeDate === "7 Feb"
-                                ? "bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc] font-bold "
-                        : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"
-                        }`}
-                        onClick={() => handleDateSelect("7 Feb")}
+                      className={`w-full date-button text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold ${
+                        activeDate === "7 Feb" ? "date-button-active" : "date-button-inactive"
+                      }`}
+                      onClick={() => handleDateSelect("7 Feb")}
                     >
-                        7 Feb
+                      7 Feb
                     </button>
                   </div>
+
 
                 <h1 className="mt-4 text-[#ccc]">Select Time</h1>
 
                 <div className="flex flex-wrap w-full max-w-1280px gap-1">
-                  {times.map((time, index) => (
-                    <button
-                    key={index}
-                    onClick={() => handleTimeSelect(time)}
-                    className={`w-[120px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300 ${
-                      activeTime === time
-                        ? "bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc] font-bold "
-                        : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"
-                    }`}
-                  >
-                    {time}
-                  </button>
-                  ))}
-                </div>
+  {times.map((time, index) => (
+    <button
+      key={index}
+      onClick={() => handleTimeSelect(time)}
+      className={`w-[120px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300 ${
+        activeTime === time ? "date-button-active" : "date-button-inactive"
+      }`}
+    >
+      {time}
+    </button>
+  ))}
+</div>
+
               </div>
             </div>
 
@@ -663,26 +709,38 @@ const Cards = () => {
           <div className="mt-6 xl:ml-4 w-[330px] p-5 text-[#ccc] bg-opacity-10 rounded-lg shadow-md">
             <h2 className="text-[30px] text-[#cccccc] font-black">Booking Details</h2>
             {bookingDetails.map((detail) => (
-              <div
-                className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
-                key={detail.key}
-              >
-                <div className="flex justify-between"><h3 className="text-[14px] text-[#cccccc] font-bold">
-                    {detail.title}
-                  </h3>
-                    <p className="text-[14px] text-[#cccccc] text-end">
-                      {detail.key === "price"
-                        ? getPrice(
-                          activeCard,
-                          bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
-                          couponCode,
-                          count
+    <div
+      className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
+      key={detail.key}
+    >
+      <div className="flex justify-between">
+        <h3 className="text-[14px] text-[#cccccc] font-bold">{detail.title}</h3>
+        <p className="text-[14px] text-[#cccccc] text-end">
+          {detail.key === "price"
+            ? (() => {
+                const priceString = getPrice(
+                  activeCard,
+                  bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+                  couponCode,
+                  count
+                );
 
-                        )
-                        : detail.description}
-                    </p>
+                if (couponCode === "LEAP25") {
+                  // Split the string to isolate totalPrice
+                  const [totalPrice, ...rest] = priceString.split(" SAR");
+                  return (
+                    <>
+                      <span className="line-through">{`${totalPrice} SAR`}</span>
+                      <span>{` ${rest.join(" SAR")}`}</span>
+                    </>
+                  );
+                }
 
-                  </div>
+                return priceString;
+              })()
+            : detail.description}
+        </p>
+      </div>
               </div>
             ))}
             <div className="mt-6 flex">
@@ -752,34 +810,31 @@ const Cards = () => {
                   </button>
                 ))}
               </div>
+              
             </div>
             <div className="details-card mt-6 w-auto p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
               <div className="flex flex-col space-y-4 ">
                 <h1 className="text-[#ccc]">Select Date</h1>
 
                 <div className="flex justify-between w-full max-w-1280px gap-2">
-                <button
-                        className={`w-full date-button hover:translate-y-[-10px] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold transition duration-300 ${
-                            activeDate === "6 Feb"
-                                 ? "bg-gradient-to-r from-[#063828] to-[#002718] text-white font-bold "
-                        : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"
-                        }`}
-                        onClick={() => handleDateSelect("6 Feb")}
+                    <button
+                      className={`w-full date-button text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold ${
+                        activeDate === "6 Feb" ? "date-button-active" : "date-button-inactive"
+                      }`}
+                      onClick={() => handleDateSelect("6 Feb")}
                     >
-                        6 Feb
+                      6 Feb
                     </button>
 
                     <button
-                        className={`w-full date-button hover:translate-y-[-10px] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold transition duration-300 ${
-                            activeDate === "7 Feb"
-                                 ? "bg-gradient-to-r from-[#063828] to-[#002718] text-white font-bold "
-                        : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"
-                        }`}
-                        onClick={() => handleDateSelect("7 Feb")}
+                      className={`w-full date-button text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold ${
+                        activeDate === "7 Feb" ? "date-button-active" : "date-button-inactive"
+                      }`}
+                      onClick={() => handleDateSelect("7 Feb")}
                     >
-                        7 Feb
+                      7 Feb
                     </button>
-                </div>
+                  </div>
 
                 <h1 className="text-[#ccc] mt-4">Select Time</h1>
 
@@ -874,28 +929,39 @@ const Cards = () => {
             <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
               Booking Details
             </h2>
-            {bookingDetails
-              .filter((detail) => detail.key !== "booking_type" && detail.key !== "no_of_people")
-              .map((detail) => (
-                <div
-                  className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
-                  key={detail.key}
-                >
-                  <div className="flex justify-between"><h3 className="text-[14px] text-[#cccccc] font-bold">
-                    {detail.title}
-                  </h3>
-                    <p className="text-[14px] text-[#cccccc] text-end">
-                      {detail.key === "price"
-                        ? getPrice(
-                          activeCard,
-                          bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
-                          couponCode,
+            {bookingDetails.map((detail) => (
+    <div
+      className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
+      key={detail.key}
+    >
+      <div className="flex justify-between">
+        <h3 className="text-[14px] text-[#cccccc] font-bold">{detail.title}</h3>
+        <p className="text-[14px] text-[#cccccc] text-end">
+          {detail.key === "price"
+            ? (() => {
+                const priceString = getPrice(
+                  activeCard,
+                  bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+                  couponCode,
+                  count
+                );
 
-                        )
-                        : detail.description}
-                    </p>
+                if (couponCode === "LEAP25") {
+                  // Split the string to isolate totalPrice
+                  const [totalPrice, ...rest] = priceString.split(" SAR");
+                  return (
+                    <>
+                      <span className="line-through">{`${totalPrice} SAR`}</span>
+                      <span>{` ${rest.join(" SAR")}`}</span>
+                    </>
+                  );
+                }
 
-                  </div>
+                return priceString;
+              })()
+            : detail.description}
+        </p>
+      </div>
                 </div>
               ))}
 
@@ -977,28 +1043,24 @@ const Cards = () => {
                 <h1 className="text-[#ccc]">Select Date</h1>
 
                 <div className="flex justify-between w-full max-w-1280px gap-2">
-                <button
-                        className={`w-full date-button hover:translate-y-[-10px] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold transition duration-300 ${
-                            activeDate === "6 Feb"
-                                 ? "bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc] font-bold "
-                        : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"
-                        }`}
-                        onClick={() => handleDateSelect("6 Feb")}
+                    <button
+                      className={`w-full date-button text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold ${
+                        activeDate === "6 Feb" ? "date-button-active" : "date-button-inactive"
+                      }`}
+                      onClick={() => handleDateSelect("6 Feb")}
                     >
-                        6 Feb
+                      6 Feb
                     </button>
 
                     <button
-                        className={`w-full date-button hover:translate-y-[-10px] text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold transition duration-300 ${
-                            activeDate === "7 Feb"
-                                 ? "bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc]font-bold "
-                        : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"
-                        }`}
-                        onClick={() => handleDateSelect("7 Feb")}
+                      className={`w-full date-button text-[18px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] ml-2 font-jura font-bold ${
+                        activeDate === "7 Feb" ? "date-button-active" : "date-button-inactive"
+                      }`}
+                      onClick={() => handleDateSelect("7 Feb")}
                     >
-                        7 Feb
+                      7 Feb
                     </button>
-                </div>
+                  </div>
 
                 <h1 className="mt-4 text-[#ccc]">Select Time</h1>
 
@@ -1097,28 +1159,39 @@ const Cards = () => {
             <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
               Booking Details
             </h2>
-            {bookingDetails
-              .filter((detail) => detail.key !== "booking_type" && detail.key !== "no_of_people")
-              .map((detail) => (
-                <div
-                  className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
-                  key={detail.key}
-                >
-                  <div className="flex justify-between"><h3 className="text-[14px] text-[#cccccc] font-bold">
-                    {detail.title}
-                  </h3>
-                    <p className="text-[14px] text-[#cccccc] text-end">
-                      {detail.key === "price"
-                        ? getPrice(
-                          activeCard,
-                          bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
-                          couponCode,
+            {bookingDetails.map((detail) => (
+    <div
+      className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
+      key={detail.key}
+    >
+      <div className="flex justify-between">
+        <h3 className="text-[14px] text-[#cccccc] font-bold">{detail.title}</h3>
+        <p className="text-[14px] text-[#cccccc] text-end">
+          {detail.key === "price"
+            ? (() => {
+                const priceString = getPrice(
+                  activeCard,
+                  bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+                  couponCode,
+                  count
+                );
 
-                        )
-                        : detail.description}
-                    </p>
+                if (couponCode === "LEAP25") {
+                  // Split the string to isolate totalPrice
+                  const [totalPrice, ...rest] = priceString.split(" SAR");
+                  return (
+                    <>
+                      <span className="line-through">{`${totalPrice} SAR`}</span>
+                      <span>{` ${rest.join(" SAR")}`}</span>
+                    </>
+                  );
+                }
 
-                  </div>
+                return priceString;
+              })()
+            : detail.description}
+        </p>
+      </div>
                 </div>
               ))}
 
