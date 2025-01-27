@@ -13,15 +13,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata = {
-  title: "Teleios - Leap Nights",
-};
 
 export default function RootLayout({ children }) {
   return (
     
     <html lang="en">
-      <link rel="icon" type="image" href="/favicon.ico" />
+      <title>Teleios - Leap Nights</title>
+      <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
