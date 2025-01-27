@@ -14,6 +14,7 @@ const Cards = () => {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [showBookingDetails, setShowBookingDetails] = useState(false);
   const [isSuccess, setIsSuccess] = useState(null); 
+  const [calculatedPrice, setCalculatedPrice] = useState("");
   const [bookingDetails, setBookingDetails] = useState([
     { key: "no_of_people", title: "Participants", description: "1" },
     { key: "duration", title: "Duration", description: "" },
@@ -91,15 +92,19 @@ const Cards = () => {
       return "";
     }
 
-    let totalPrice = originalPrice * count;
-    
+    // let totalPrice = originalPrice * count;
+
+    let totalPrice = activeCard === "normal" ? originalPrice * count : originalPrice;
 
     if (coupon === "LEAP25") {
-      const discountedPrice = originalPrice / 2;
+      const discountedPrice = totalPrice / 2;
       return `${totalPrice} SAR ${discountedPrice}  (50% off, VAT Inc)`;
     }
 
     return `${totalPrice} SAR (VAT Inclusive)`;
+    
+  
+   
   };
 
 
@@ -128,6 +133,7 @@ const Cards = () => {
           : detail
       )
     );
+    
   };
 
   const handleDurationSelect = (selectedDuration) => {
@@ -217,12 +223,12 @@ const Cards = () => {
         )
       );
   
-      // Check seat availability
+
       if (activeTime && times[activeTime]?.sims < newCount) {
         setPopupMessage(`Only ${times[activeTime]?.sims || 0} seats are available for the selected time slot.`);
         setIsPopupVisible(true);
   
-        // Hide popup after 3 seconds
+  
         setTimeout(() => {
           setIsPopupVisible(false);
         }, 3000);
@@ -231,7 +237,7 @@ const Cards = () => {
       setPopupMessage("Maximum limit of 14 seats reached.");
       setIsPopupVisible(true);
   
-      // Hide popup after 3 seconds
+
       setTimeout(() => {
         setIsPopupVisible(false);
       }, 3000);
@@ -275,14 +281,42 @@ const Cards = () => {
 
 
   const handleCouponCode = () => {
+    const duration = bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0];
+    
+    // Check if the coupon code matches
     if (couponCode === "LEAP25") {
-      setDiscountMessage("Enjoy 50% off all services during Leap Nights, valid only on February 6 and 7. The discount will be applied once you select your sessions.");
-      setTimeout(() => {  setDiscountMessage(""); }, 3000)
+      setDiscountMessage("Enjoy 50% off all Sessions and F&B");
     } else {
       setDiscountMessage("Invalid coupon code. Please try again.");
-      setTimeout(() => {  setDiscountMessage(""); }, 3000)
+      setTimeout(() => {
+        setDiscountMessage("");
+      }, 3000);
+      return; // Exit the function if the coupon code is invalid
     }
+  
+    // Calculate the price and update the state if the coupon is valid
+    const newPrice = getPrice(activeCard, duration, couponCode, count);
+    setCalculatedPrice(newPrice);
+  
   };
+  
+
+  // const handleCouponCode = () => {
+  //   const duration = bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0];
+  //   const newPrice = getPrice(activeCard, duration, couponCode, count);
+  //   setCalculatedPrice(newPrice);
+  //   setDiscountMessage("Coupon Applied Successfully!");
+  // };
+
+  // const handleCouponCode = () => {
+  //   if (couponCode === "LEAP25") {
+  //     setDiscountMessage("Enjoy 50% off all services during Leap Nights.");
+  //     setTimeout(() => {  setDiscountMessage(""); }, 3000)
+  //   } else {
+  //     setDiscountMessage("Invalid coupon code. Please try again.");
+  //     setTimeout(() => {  setDiscountMessage(""); }, 3000)
+  //   }
+  // };
 
 
   
@@ -706,7 +740,7 @@ const Cards = () => {
             )}
           </div>
 
-          <div className="mt-6 xl:ml-4 w-[330px] p-5 text-[#ccc] bg-opacity-10 rounded-lg shadow-md">
+          {/* <div className="mt-6 xl:ml-4 w-[330px] p-5 text-[#ccc] bg-opacity-10 rounded-lg shadow-md">
             <h2 className="text-[30px] text-[#cccccc] font-black">Booking Details</h2>
             {bookingDetails.map((detail) => (
     <div
@@ -786,7 +820,85 @@ const Cards = () => {
                 <span className="py-2">CONTINUE</span>
               </button>
             </div>
-          </div>
+          </div> */}
+
+<div className="mt-6 xl:ml-4 w-[330px] p-5 bg-[#cccccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
+  <h2 className="text-[30px] text-[#cccccc] font-black">Booking Details</h2>
+  {bookingDetails.map((detail) => (
+    <div
+      className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
+      key={detail.key}
+    >
+      <div className="flex justify-between">
+        <h3 className="text-[14px] text-[#cccccc] font-bold">{detail.title}</h3>
+        <p className="text-[14px] text-[#cccccc] text-end">
+          {detail.key === "price"
+            ? (() => {
+                const priceString = calculatedPrice || getPrice(
+                  activeCard,
+                  bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+                  "",
+                  count
+                );
+
+                if (couponCode === "LEAP25" && calculatedPrice) {
+                  // Split the string to isolate totalPrice
+                  const [totalPrice, ...rest] = priceString.split(" SAR");
+                  return (
+                    <>
+                      <span className="line-through">{`${totalPrice} SAR`}</span>
+                      <span>{` ${rest.join(" SAR")}`}</span>
+                    </>
+                  );
+                }
+
+                return priceString;
+              })()
+            : detail.description}
+        </p>
+      </div>
+    </div>
+  ))}
+  <div className="mt-6 flex">
+    <input
+      type="text"
+      value={couponCode}
+      onChange={(e) => setCouponCode(e.target.value)}
+      placeholder="Enter Coupon Code"
+      className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
+    />
+    <button
+      onClick={handleCouponCode}
+      className="w-[100px] hover:translate-y-[-10px] h-[44px] rounded-lg bg-gradient-to-r from-[#C09E5D] to-[#FCE6A2] text-[#063828] ml-2"
+    >
+      Apply
+    </button>
+  </div>
+  {discountMessage && (
+    <p className="text-[14px] mt-4 text-[#6ada2a]">{discountMessage}</p>
+  )}
+  <div className="max-w-3xl mx-auto mt-20">
+    {generalError && (
+      <p className="text-[#6ada2a] text-md font-normal">{generalError}</p>
+    )}
+    {bookingErrors.length > 0 && (
+      <ul>
+        {bookingErrors.map((error, index) => (
+          <li key={index} className="text-red-500 text-md font-normal">
+            {error}
+          </li>
+        ))}
+      </ul>
+    )}
+    <button
+      onClick={handleContinue}
+      className="w-full my-2 hover:translate-y-[-10px] h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300 hover:border-0"
+    >
+      <span className="py-2">CONTINUE</span>
+    </button>
+  </div>
+</div>
+
 
         </div>
       );
@@ -925,7 +1037,7 @@ const Cards = () => {
               </div>
             )}
           </div>
-          <div className="mt-6 xl:ml-4 w-[330px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
+          {/* <div className="mt-6 xl:ml-4 w-[330px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
             <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
               Booking Details
             </h2>
@@ -1012,7 +1124,86 @@ const Cards = () => {
                 <span className="py-2">CONTINUE</span>
               </button>
             </div>
+          </div> */}
+          <div className="mt-6 xl:ml-4 w-[330px] p-5 bg-[#cccccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
+        <h2 className="text-[30px] text-[#cccccc] font-black">Booking Details</h2>
+        {bookingDetails
+        .filter((detail) => detail.key !== "no_of_people")
+        .map((detail) => (
+          <div
+            className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
+            key={detail.key}
+          >
+            <div className="flex justify-between">
+              <h3 className="text-[14px] text-[#cccccc] font-bold">{detail.title}</h3>
+              <p className="text-[14px] text-[#cccccc] text-end">
+                {detail.key === "price"
+                  ? (() => {
+                      const priceString = calculatedPrice || getPrice(
+                        activeCard,
+                        bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+                        "",
+                        count
+                      );
+
+                      if (couponCode === "LEAP25" && calculatedPrice) {
+                        // Split the string to isolate totalPrice
+                        const [totalPrice, ...rest] = priceString.split(" SAR");
+                        return (
+                          <>
+                            <span className="line-through">{`${totalPrice} SAR`}</span>
+                            <span>{` ${rest.join(" SAR")}`}</span>
+                          </>
+                        );
+                      }
+
+                      return priceString;
+                    })()
+                  : detail.description}
+              </p>
+            </div>
           </div>
+        ))}
+        <div className="mt-6 flex">
+          <input
+            type="text"
+            value={couponCode}
+            onChange={(e) => setCouponCode(e.target.value)}
+            placeholder="Enter Coupon Code"
+            className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
+          />
+          <button
+            onClick={handleCouponCode}
+            className="w-[100px] hover:translate-y-[-10px] h-[44px] rounded-lg bg-gradient-to-r from-[#C09E5D] to-[#FCE6A2] text-[#063828] ml-2"
+          >
+            Apply
+          </button>
+        </div>
+        {discountMessage && (
+          <p className="text-[14px] mt-4 text-[#6ada2a]">{discountMessage}</p>
+        )}
+        <div className="max-w-3xl mx-auto mt-20">
+          {generalError && (
+            <p className="text-[#6ada2a] text-md font-normal">{generalError}</p>
+          )}
+          {bookingErrors.length > 0 && (
+            <ul>
+              {bookingErrors.map((error, index) => (
+                <li key={index} className="text-red-500 text-md font-normal">
+                  {error}
+                </li>
+              ))}
+            </ul>
+          )}
+          <button
+            onClick={handleContinue}
+            className="w-full my-2 hover:translate-y-[-10px] h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300 hover:border-0"
+          >
+            <span className="py-2">CONTINUE</span>
+          </button>
+        </div>
+      </div>
+
         </div>
       );
     } else if (activeCard === "suite") {
