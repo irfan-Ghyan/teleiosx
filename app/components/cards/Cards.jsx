@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import BookNow from "../booknow/BookNow";
 import Link from "next/link";
+import { AiOutlineArrowLeft } from 'react-icons/ai';
 
 const Cards = () => {
   const [activeCard, setActiveCard] = useState("");
@@ -497,7 +498,7 @@ const Cards = () => {
 
             {bookingMessage && (
         <div
-          className={`bg-white p-6 rounded-md shadow-md text-center w-[300px] py-4 mt-4 `}
+          className={`bg-white p-6 rounded-md shadow-md text-center w-full py-4 mt-4 `}
         >
           <p
             className={`font-normal mb-10 ${
@@ -1442,8 +1443,12 @@ const Cards = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-2 my-10">
+       <Link className="text-[#e3ce90] flex items-center gap-2" href='/'>
+    <AiOutlineArrowLeft size={20} />
+    Back
+  </Link>
       {!showBookingDetails && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 direction-card ">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 direction-card  mt-10">
           <div
             onClick={() => handleCardClick("normal")}
             className={`p-5 rounded-lg shadow-lg text-center transform transition-all duration-300 hover:translate-y-[-10px] hover:shadow-2xl opacity-100 w-auto flex flex-col justify-between ${activeCard === "normal"
