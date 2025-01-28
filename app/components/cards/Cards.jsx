@@ -163,10 +163,16 @@ const Cards = () => {
             ...detail,
             description: getPrice(activeCard, selectedDuration, couponCode),
           }
-          : detail
+          : { ...detail, description: "" }
     );
     setBookingDetails(updatedBookingDetails);
-    // setCalculatedPrice(newPrice);
+    
+    if (isCouponApplied) {
+      setCalculatedPrice(newPrice);
+    }
+
+    setActiveDate("");
+    setActiveTime("")
   };
 
 
