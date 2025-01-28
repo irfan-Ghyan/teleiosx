@@ -219,90 +219,6 @@ const Cards = () => {
   };
 
 
-
-
-  // const increaseCount = () => {
-  //   if (count < 14) {
-  //     const newCount = count + 1;
-  //     setCount(newCount);
-
-  //     const newPrice = getPrice(activeCard, couponCode, count);
-  //     setCalculatedPrice(newPrice);
-  
-  //     // Update booking details
-  //     setBookingDetails((prevDetails) =>
-  //       prevDetails.map((detail) =>
-  //         detail.key === "no_of_people"
-  //           ? { ...detail, description: newCount.toString() }
-  //           : detail.key === "price"
-  //             ? {
-  //               ...detail,
-  //               description: getPrice(
-  //                 activeCard,
-  //                 prevDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
-  //                 couponCode,
-  //                 newCount
-  //               ),
-                
-                
-  //             }
-  //             : detail
-  //       )
-    
-       
-        
-  //     );
-  
-
-  //     if (activeTime && times[activeTime]?.sims < newCount) {
-  //       setPopupMessage(`Only ${times[activeTime]?.sims || 0} seats are available for the selected time slot.`);
-  //       setIsPopupVisible(true);
-  
-  
-  //       setTimeout(() => {
-  //         setIsPopupVisible(false);
-  //       }, 3000);
-  //     }
-  //   } else {
-  //     setPopupMessage("Maximum limit of 14 seats reached.");
-  //     setIsPopupVisible(true);
-  
-
-  //     setTimeout(() => {
-  //       setIsPopupVisible(false);
-  //     }, 3000);
-  //   }
-  // };
-  
-
-  // const decreaseCount = () => {
-  //   if (count > 1) {
-  //     const newCount = count - 1;
-  //     setCount(newCount);
-
-  //     const newPrice = getPrice(activeCard, couponCode, count);
-  //     setCalculatedPrice(newPrice);
-
-  //     setBookingDetails((prevDetails) =>
-  //       prevDetails.map((detail) =>
-  //         detail.key === "no_of_people"
-  //           ? { ...detail, description: newCount.toString() }
-  //           : detail.key === "price"
-  //             ? {
-  //               ...detail,
-  //               description: getPrice(
-  //                 activeCard,
-  //                 prevDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
-  //                 couponCode,
-  //                 newCount
-  //               ),
-  //             }
-  //             : detail
-  //       )
-  //     );
-  //   }
-  // };
-
   const increaseCount = () => {
     if (count < 14) {
       const newCount = count + 1;
@@ -591,48 +507,48 @@ const Cards = () => {
           </div>
 
           <div className="mt-6 lg:ml-4 w-[330px] p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md text-center mb-5 transition-transform transition-shadow duration-300">
-  <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
-    Booking Details
-  </h2>
-  {bookingDetails
-    .filter((detail) => detail.key !== "booking_type")
-    .map((detail) => (
-      <div
-        className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
-        key={detail.key}
-      >
-        <div className="flex justify-between">
-          <h3 className="text-[14px] text-[#cccccc] font-bold">
-            {detail.title}
-          </h3>
-          <p className="text-[14px] text-[#cccccc]">
-            {detail.key === "price"
-              ? (() => {
-                  const priceString = getPrice(
-                    activeCard,
-                    bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
-                    couponCode,
-                    count
-                  );
+                    <h2 className="text-[30px] text-[#cccccc] font-black font-orbitron mb-[24px]">
+                      Booking Details
+                    </h2>
+                    {bookingDetails
+                      .filter((detail) => detail.key !== "booking_type")
+                      .map((detail) => (
+                        <div
+                          className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
+                          key={detail.key}
+                        >
+                          <div className="flex justify-between">
+                            <h3 className="text-[14px] text-[#cccccc] font-bold">
+                              {detail.title}
+                            </h3>
+                            <p className="text-[14px] text-[#cccccc]">
+                              {detail.key === "price"
+                                ? (() => {
+                                    const priceString = getPrice(
+                                      activeCard,
+                                      bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+                                      couponCode,
+                                      count
+                                    );
 
-                  if (couponCode === "LEAP25") {
-                    const [totalPrice, ...rest] = priceString.split(" SAR");
-                    return (
-                      <>
-                        <span className="line-through">{`${totalPrice} SAR`}</span>
-                        <span>{rest.join(" SAR")}</span>
-                      </>
-                    );
-                  }
+                                    if (couponCode === "LEAP25") {
+                                      const [totalPrice, ...rest] = priceString.split(" SAR");
+                                      return (
+                                        <>
+                                          <span className="line-through">{`${totalPrice} SAR`}</span>
+                                          <span>{rest.join(" SAR")}</span>
+                                        </>
+                                      );
+                                    }
 
-                  return priceString;
-                })()
-              : detail.description}
-          </p>
-        </div>
-      </div>
-    ))}
-</div>
+                                    return priceString;
+                                  })()
+                                : detail.description}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+              </div>
 
         </div>
       );
@@ -641,8 +557,8 @@ const Cards = () => {
     if (activeCard === "normal") {
       return (
 
-        <div className="xl:flex ">
-          <div>
+        <div className="xl:flex w-full">
+          <div className="w-[900px]">
             <div className=" mt-6 w-auto p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
               <div className="flex-layout flex justify-between">
                 <div>
@@ -810,87 +726,86 @@ const Cards = () => {
             )}
           </div>
 
+          <div className="mt-6 xl:ml-4 w-auto p-5 bg-[#cccccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
+            <h2 className="text-[30px] text-[#cccccc] font-black">Booking Details</h2>
+            {bookingDetails.map((detail) => (
+            
+              <div
+            className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
+            key={detail.key}
+          >
+            <div className="flex justify-between">
+              <h3 className="text-[14px] text-[#cccccc] font-bold">{detail.title}</h3>
+              <p className="text-[14px] text-[#cccccc] text-end">
+                {detail.key === "price"
+                  ? (() => {
+                      const priceString =
+                        calculatedPrice ||
+                        getPrice(
+                          activeCard,
+                          bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+                          "",
+                          count
+                        );
 
-<div className="mt-6 xl:ml-4 w-[330px] p-5 bg-[#cccccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
-  <h2 className="text-[30px] text-[#cccccc] font-black">Booking Details</h2>
-  {bookingDetails.map((detail) => (
-   
-    <div
-  className="border-b-[0.5px] border-opacity-[50%] border-[#063828] py-[12px]"
-  key={detail.key}
->
-  <div className="flex justify-between">
-    <h3 className="text-[14px] text-[#cccccc] font-bold">{detail.title}</h3>
-    <p className="text-[14px] text-[#cccccc] text-end">
-      {detail.key === "price"
-        ? (() => {
-            const priceString =
-              calculatedPrice ||
-              getPrice(
-                activeCard,
-                bookingDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
-                "",
-                count
-              );
+                      if (isCouponApplied && couponCode === "LEAP25" && calculatedPrice) {
+                        // Split the string to isolate totalPrice
+                        const [totalPrice, ...rest] = priceString.split(" SAR");
+                        return (
+                          <>
+                            <span className="line-through">{`${totalPrice} SAR`}</span>
+                            <span>{` ${rest.join(" SAR")}`}</span>
+                          </>
+                        );
+                      }
 
-            if (isCouponApplied && couponCode === "LEAP25" && calculatedPrice) {
-              // Split the string to isolate totalPrice
-              const [totalPrice, ...rest] = priceString.split(" SAR");
-              return (
-                <>
-                  <span className="line-through">{`${totalPrice} SAR`}</span>
-                  <span>{` ${rest.join(" SAR")}`}</span>
-                </>
-              );
-            }
+                      return priceString;
+                    })()
+                  : detail.description}
+              </p>
+            </div>
+          </div>
 
-            return priceString;
-          })()
-        : detail.description}
-    </p>
-  </div>
-</div>
-
-  ))}
-  <div className="mt-6 flex">
-    <input
-      type="text"
-      value={couponCode}
-      onChange={(e) => setCouponCode(e.target.value)}
-      placeholder="Enter Coupon Code"
-      className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
-    />
-    <button
-      onClick={handleCouponCode}
-      className="w-[100px] hover:translate-y-[-10px] h-[44px] rounded-lg bg-gradient-to-r from-[#C09E5D] to-[#FCE6A2] text-[#063828] ml-2"
-    >
-      Apply
-    </button>
-  </div>
-  {discountMessage && (
-    <p className="text-[14px] mt-4 text-[#6ada2a]">{discountMessage}</p>
-  )}
-  <div className="max-w-3xl mx-auto mt-20">
-    {generalError && (
-      <p className="text-[#6ada2a] text-md font-normal">{generalError}</p>
-    )}
-    {bookingErrors.length > 0 && (
-      <ul>
-        {bookingErrors.map((error, index) => (
-          <li key={index} className="text-red-500 text-md font-normal">
-            {error}
-          </li>
-        ))}
-      </ul>
-    )}
-    <button
-      onClick={handleContinue}
-      className="w-full my-2 hover:translate-y-[-10px] h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300 hover:border-0"
-    >
-      <span className="py-2">CONTINUE</span>
-    </button>
-  </div>
-</div>
+            ))}
+            <div className="mt-6 flex">
+              <input
+                type="text"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value)}
+                placeholder="Enter Coupon Code"
+                className="w-full p-2.5 border border-[#ccc] rounded-md mb-2.5 bg-white/20 text-[#ccc]"
+              />
+              <button
+                onClick={handleCouponCode}
+                className="w-[100px] hover:translate-y-[-10px] h-[44px] rounded-lg bg-gradient-to-r from-[#C09E5D] to-[#FCE6A2] text-[#063828] ml-2"
+              >
+                Apply
+              </button>
+            </div>
+            {discountMessage && (
+              <p className="text-[14px] mt-4 text-[#6ada2a]">{discountMessage}</p>
+            )}
+            <div className="max-w-3xl mx-auto mt-20">
+              {generalError && (
+                <p className="text-[#6ada2a] text-md font-normal">{generalError}</p>
+              )}
+              {bookingErrors.length > 0 && (
+                <ul>
+                  {bookingErrors.map((error, index) => (
+                    <li key={index} className="text-red-500 text-md font-normal">
+                      {error}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <button
+                onClick={handleContinue}
+                className="w-full my-2 hover:translate-y-[-10px] h-[40px] bg-gradient-to-r from-[#C09E5D] via-[#FCE6A2] to-[#C09E5D] text-[#063828] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] border-opacity-30 border-[#063828] ml-2 font-jura font-bold hover:text-[#e3ce90] hover:bg-gradient-to-r hover:from-[#063828] hover:to-[#002718] transition duration-300 hover:border-0"
+              >
+                <span className="py-2">CONTINUE</span>
+              </button>
+            </div>
+          </div>
 
 
         </div>
@@ -898,7 +813,7 @@ const Cards = () => {
     } else if (activeCard === "vip") {
       return (
         <div className="xl:flex">
-          <div>
+          <div className="w-auto xl:w-[900px]">
             <div className=" details-card mt-6 w-auto p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md  mb-5 transition-transform transition-shadow duration-300">
               <h3 className="text-[#ccc]"> Select Your Duration</h3>
               <div className="xl:flex mt-[27px] gap-x-2">
@@ -1031,7 +946,7 @@ const Cards = () => {
             )}
           </div>
 
-          <div className="mt-6 xl:ml-4 w-[330px] p-5 bg-[#cccccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
+          <div className="mt-6 xl:ml-4 w-auto p-5 bg-[#cccccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
         <h2 className="text-[30px] text-[#cccccc] font-black">Booking Details</h2>
         {bookingDetails
         .filter((detail) => detail.key !== "no_of_people")
@@ -1118,7 +1033,7 @@ const Cards = () => {
     } else if (activeCard === "suite") {
       return (
         <div className="xl:flex">
-          <div>
+          <div className="w-auto xl:w-[900px]">
             <div className="details-card mt-6 w-auto p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
               <div>
                 <div>
@@ -1257,7 +1172,7 @@ const Cards = () => {
             )}
           </div>
 
-          <div className="mt-6 xl:ml-4 w-[330px] p-5 bg-[#cccccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
+          <div className="mt-6 xl:ml-4 w-auto p-5 bg-[#cccccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
         <h2 className="text-[30px] text-[#cccccc] font-black">Booking Details</h2>
         {bookingDetails
         .filter((detail) => detail.key !== "no_of_people")
