@@ -586,7 +586,7 @@ const Cards = () => {
                   
                 </div>
                 {isPopupVisible && (
-                  <div className="fixed transform mt-10 text-green-500 text-lg px-4 py-2 rounded-lg shadow-lg animate-fade-in-out">
+                  <div className="fixed transform mt-2 text-green-500 text-lg  py-5 ">
                     {popupMessage}
                   </div>
                 )}
