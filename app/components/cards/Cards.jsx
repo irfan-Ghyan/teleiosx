@@ -163,7 +163,7 @@ const Cards = () => {
             ...detail,
             description: getPrice(activeCard, selectedDuration, couponCode),
           }
-          : { ...detail, description: "" }
+          : { ...detail }
     );
     setBookingDetails(updatedBookingDetails);
     
@@ -217,6 +217,7 @@ const Cards = () => {
       )
     );
   };
+
 
 
   const increaseCount = () => {
@@ -726,6 +727,8 @@ const Cards = () => {
             )}
           </div>
 
+
+
           <div className="mt-6 xl:ml-4 w-auto p-5 bg-[#cccccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
             <h2 className="text-[30px] text-[#cccccc] font-black">Booking Details</h2>
             {bookingDetails.map((detail) => (
@@ -813,7 +816,7 @@ const Cards = () => {
     } else if (activeCard === "vip") {
       return (
         <div className="xl:flex">
-          <div className="w-auto xl:w-[900px]">
+          <div className="w-[900px]">
             <div className=" details-card mt-6 w-auto p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md  mb-5 transition-transform transition-shadow duration-300">
               <h3 className="text-[#ccc]"> Select Your Duration</h3>
               <div className="xl:flex mt-[27px] gap-x-2">
@@ -1033,7 +1036,7 @@ const Cards = () => {
     } else if (activeCard === "suite") {
       return (
         <div className="xl:flex">
-          <div className="w-auto xl:w-[900px]">
+          <div className="w-[900px]">
             <div className="details-card mt-6 w-auto p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
               <div>
                 <div>
