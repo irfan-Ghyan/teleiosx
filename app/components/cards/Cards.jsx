@@ -144,8 +144,8 @@ const Cards = () => {
       { key: "time", title: "Time", description: "" },
     ]);
     setCount(1);
-  // setActiveDate("");
-  // setActiveTime("");
+  setActiveDate("");
+  setActiveTime("");
   setCalculatedPrice("");
   // setIsCouponApplied(false);
   // setDiscountMessage("");
@@ -187,6 +187,7 @@ const Cards = () => {
           : detail
       )
     );
+    
   };
 
 
@@ -559,7 +560,7 @@ const Cards = () => {
       return (
 
         <div className="xl:flex w-full">
-          <div className="w-[900px]">
+          <div className="xl:w-[900px]">
             <div className=" mt-6 w-auto p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
               <div className="flex-layout flex justify-between">
                 <div>
@@ -816,7 +817,7 @@ const Cards = () => {
     } else if (activeCard === "vip") {
       return (
         <div className="xl:flex">
-          <div className="w-[900px]">
+          <div className="xl:w-[900px]">
             <div className=" details-card mt-6 w-auto p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md  mb-5 transition-transform transition-shadow duration-300">
               <h3 className="text-[#ccc]"> Select Your Duration</h3>
               <div className="xl:flex mt-[27px] gap-x-2">
@@ -1036,7 +1037,7 @@ const Cards = () => {
     } else if (activeCard === "suite") {
       return (
         <div className="xl:flex">
-          <div className="w-[900px]">
+          <div className="xl:w-[900px]">
             <div className="details-card mt-6 w-auto p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5 transition-transform transition-shadow duration-300">
               <div>
                 <div>
