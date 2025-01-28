@@ -144,11 +144,11 @@ const Cards = () => {
       { key: "time", title: "Time", description: "" },
     ]);
     setCount(1);
-  setActiveDate("");
-  setActiveTime("");
+  // setActiveDate("");
+  // setActiveTime("");
   setCalculatedPrice("");
-  setIsCouponApplied(false);
-  setDiscountMessage("");
+  // setIsCouponApplied(false);
+  // setDiscountMessage("");
     
   };
 
@@ -174,6 +174,7 @@ const Cards = () => {
     setActiveDate("");
     setActiveTime("")
   };
+
 
 
 
