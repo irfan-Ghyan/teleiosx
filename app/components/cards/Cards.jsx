@@ -577,7 +577,7 @@ const Cards = () => {
             <div>
               <div className="details-card mt-6 w-auto p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md mb-5">
                 <h3 className="text-[#ccc]">Select Your Duration</h3>
-                <div className="xl:flex mt-[27px] gap-x-2">
+                <div className="md:flex lg:flex xl:flex mt-[27px] gap-x-2">
                   {Object.keys(priceMapping[activeCard] || {}).map(
                     (duration) => (
                       <button
@@ -634,7 +634,7 @@ const Cards = () => {
                     <button
                       key={index}
                       onClick={() => handleTimeSelect(time)}
-                      className={`w-full mt-2 md:mt-0 lg:mt-0 xl:mt-0 lg:w-[146px] md:w-[160px] xl:w-[130px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300 ${
+                      className={`scree-size w-[133px] md:w-[60px] lg:w-[132px] xl:w=[132px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300 ${
                         activeTime === time
                           ? "date-button-active"
                           : "date-button-inactive"
@@ -878,7 +878,7 @@ const Cards = () => {
                     <button
                       key={index}
                       onClick={() => handleTimeSelect(time)}
-                      className={`w-full mt-2 md:mt-0 lg:mt-0 xl:mt-0 lg:w-[146px] md:w-[160px] xl:w-[130px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300  ${
+                      className={`w-[133px] xl:w=[120px] xl:w=[120px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300  ${
                         activeTime === time
                           ? "bg-gradient-to-r from-[#063828] to-[#002718] text-white font-bold "
                           : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"
@@ -1130,7 +1130,7 @@ const Cards = () => {
                     <button
                       key={index}
                       onClick={() => handleTimeSelect(time)}
-                      className={`w-full mt-2 md:mt-0 lg:mt-0 xl:mt-0 lg:w-[146px] md:w-[160px] xl:w-[130px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300 ${
+                      className={`w-[133px] xl:w=[120px] xl:w=[120px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300 ${
                         activeTime === time
                           ? "bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc] font-bold "
                           : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"

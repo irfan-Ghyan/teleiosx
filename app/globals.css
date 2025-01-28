@@ -245,6 +245,11 @@ a[x-apple-data-detectors],
   }
 }
 
+@media screen and (max-width: 896px) {
+  .scree-size {
+      width: 153px !important;
+  }
+}
 
 
 /* Styles for the active button */
