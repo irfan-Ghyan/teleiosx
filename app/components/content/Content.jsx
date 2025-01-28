@@ -5,7 +5,7 @@ const Content = () => {
   return (
     <>
       <div className="max-w-7xl mx-auto p-6">
-        <div className="pt-[80px] ">
+        <div className="xl:pt-[80px] ">
           <h1 className="text-2xl font-bold text-center text-[#C09E5D] mb-4">
             Experience the Thrill of TeleiosX During LEAP 2025
           </h1>

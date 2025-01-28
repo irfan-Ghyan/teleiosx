@@ -23,7 +23,6 @@ export default function RootLayout({ children }) {
             className="absolute top-0 left-0 w-full h-full object-cover z-[-1]"
           >
             <source src="/assets/video/dome.webm" type="video/mp4" />
-            Your browser does not support the video tag.
           </video>
           <div className="absolute top-0 left-0 w-full h-full bg-[#07251c] bg-opacity-80 z-0"></div>
           <div className="relative z-10 flex flex-col flex-grow text-white">
