@@ -464,7 +464,6 @@ const Cards = () => {
     const customerEmail = formData.email;
     const companyEmail = "info@teleiosx.com";
 
-    // https://leap.teleiosx.com/email/email.phpapi/send-email
     try {
       const response = await fetch(
         "https://leap.teleiosx.com/email/email.php",

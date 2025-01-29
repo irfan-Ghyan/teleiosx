@@ -245,27 +245,24 @@ a[x-apple-data-detectors],
   }
 }
 
-@media screen and (max-width: 896px) {
+@media screen and (min-width: 668px) and (max-width: 896px) {
   .scree-size {
-      width: 153px !important;
+      width: 140px !important;
   }
 }
 
 
-/* Styles for the active button */
 .date-button-active {
   background: linear-gradient(to right, #063828, #002718);
   color: #ccc;
   font-weight: bold;
 }
 
-/* Styles for the inactive button */
 .date-button-inactive {
   background: linear-gradient(to right, #c09e5f, #fce6a2);
   color: #063828;
 }
 
-/* Hover effect for buttons */
 .date-button:hover {
   transform: translateY(-10px);
   transition: transform 0.3s ease-in-out;
