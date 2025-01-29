@@ -210,38 +210,128 @@ const Cards = () => {
     );
   };
 
+  // const increaseCount = () => {
+  //   if (count < 14) {
+  //     const newCount = count + 1;
+  //     setCount(newCount);
+
+  //     const duration = bookingDetails
+  //       .find((d) => d.key === "duration")
+  //       ?.description.split(" ")[0];
+
+
+  //     const newPrice = getPrice(activeCard, duration, couponCode, newCount);
+  //     setCalculatedPrice(newPrice);
+
+
+  //     setBookingDetails((prevDetails) =>
+  //       prevDetails.map((detail) =>
+  //         detail.key === "no_of_people"
+  //           ? { ...detail, description: newCount.toString() }
+  //           : detail.key === "price"
+  //           ? { ...detail,
+  //             description: getPrice(
+  //               activeCard,
+  //               prevDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+  //               couponCode,
+  //               newCount
+  //             ),
+  //           }
+  //           : detail
+  //     )
+  //     );
+
+      
+  //     if (activeTime && times[activeTime]?.sims < newCount) {
+  //       setPopupMessage(`Only ${times[activeTime]?.sims || 0} seats are available for the selected time slot.`);
+  //       setIsPopupVisible(true);
+  
+  
+  //       setTimeout(() => {
+  //         setIsPopupVisible(false);
+  //       }, 3000);
+  //     }
+  //   } else {
+  //     setPopupMessage("Maximum limit of 14 seats reached.");
+  //     setIsPopupVisible(true);
+
+  //     setTimeout(() => {
+  //       setIsPopupVisible(false);
+  //     }, 3000);
+  //   }
+  // };
+
+  // const decreaseCount = () => {
+  //   if (count > 1) {
+  //     const newCount = count - 1;
+  //     setCount(newCount);
+
+  //     const duration = bookingDetails
+  //       .find((d) => d.key === "duration")
+  //       ?.description.split(" ")[0]; 
+
+  //     const newPrice = getPrice(activeCard, duration, couponCode, newCount);
+  //     setCalculatedPrice(newPrice);
+
+  //     setBookingDetails((prevDetails) =>
+  //       prevDetails.map((detail) =>
+  //         detail.key === "no_of_people"
+  //           ? { ...detail, description: newCount.toString() }
+  //           : detail.key === "price"
+  //           ? { ...detail,
+  //             description: getPrice(
+  //               activeCard,
+  //               prevDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+  //               couponCode,
+  //               newCount
+  //             ),
+  //           }
+  //           : detail
+  //     )
+  //   );
+
+      
+  //   }
+  // };
+
+
   const increaseCount = () => {
     if (count < 14) {
       const newCount = count + 1;
       setCount(newCount);
-
+  
       const duration = bookingDetails
         .find((d) => d.key === "duration")
         ?.description.split(" ")[0];
-      const newPrice = getPrice(activeCard, duration, couponCode, newCount);
-      setCalculatedPrice(newPrice);
-      setBookingDetails((prevDetails) =>
-        prevDetails.map((detail) =>
-          detail.key === "no_of_people"
-            ? { ...detail, description: newCount.toString() }
-            : detail.key === "price"
-            ? { ...detail,
-              description: getPrice(
-                activeCard,
-                prevDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
-                couponCode,
-                newCount
-              ),
-            }
-            : detail
-      )
-      );
+  
+      if (couponCode) {
 
+        const newPrice = getPrice(activeCard, duration, couponCode, newCount);
+        setCalculatedPrice(newPrice);
+      } else {
       
+        setBookingDetails((prevDetails) =>
+          prevDetails.map((detail) =>
+            detail.key === "no_of_people"
+              ? { ...detail, description: newCount.toString() }
+              : detail.key === "price"
+              ? {
+                  ...detail,
+                  description: getPrice(
+                    activeCard,
+                    prevDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+                    couponCode,
+                    newCount
+                  ),
+                }
+              : detail
+          )
+        );
+      }
+  
       if (activeTime && times[activeTime]?.sims < newCount) {
         setPopupMessage(`Only ${times[activeTime]?.sims || 0} seats are available for the selected time slot.`);
         setIsPopupVisible(true);
-  
   
         setTimeout(() => {
           setIsPopupVisible(false);
@@ -250,47 +340,50 @@ const Cards = () => {
     } else {
       setPopupMessage("Maximum limit of 14 seats reached.");
       setIsPopupVisible(true);
-
+  
       setTimeout(() => {
         setIsPopupVisible(false);
       }, 3000);
     }
   };
+  
 
   const decreaseCount = () => {
     if (count > 1) {
       const newCount = count - 1;
       setCount(newCount);
-
+  
       const duration = bookingDetails
         .find((d) => d.key === "duration")
-        ?.description.split(" ")[0]; 
-      const newPrice = getPrice(activeCard, duration, couponCode, newCount);
-      setCalculatedPrice(newPrice);
-
-      setBookingDetails((prevDetails) =>
-        prevDetails.map((detail) =>
-          detail.key === "no_of_people"
-            ? { ...detail, description: newCount.toString() }
-            : detail.key === "price"
-            ? { ...detail,
-              description: getPrice(
-                activeCard,
-                prevDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
-                couponCode,
-                newCount
-              ),
-            }
-            : detail
-      )
-    );
-
-      
+        ?.description.split(" ")[0];
+  
+      if (couponCode) {
+        // If a coupon is selected, apply discount calculation
+        const newPrice = getPrice(activeCard, duration, couponCode, newCount);
+        setCalculatedPrice(newPrice);
+      } else {
+        // If no coupon is selected, update bookingDetails instead
+        setBookingDetails((prevDetails) =>
+          prevDetails.map((detail) =>
+            detail.key === "no_of_people"
+              ? { ...detail, description: newCount.toString() }
+              : detail.key === "price"
+              ? {
+                  ...detail,
+                  description: getPrice(
+                    activeCard,
+                    prevDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+                    couponCode,
+                    newCount
+                  ),
+                }
+              : detail
+          )
+        );
+      }
     }
   };
-
-
-
+  
 
   const handleSeatChange = (newCount) => {
     setBookingDetails((prevDetails) =>
