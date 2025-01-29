@@ -753,7 +753,7 @@ const Cards = () => {
                     <button
                       key={index}
                       onClick={() => handleTimeSelect(time)}
-                      className={`scree-size w-[133px] md:w-[60px] lg:w-[132px] xl:w=[132px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300 ${
+                      className={`scree-size lg:w-[132px] xl:w=[132px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300 ${
                         activeTime === time
                           ? "date-button-active"
                           : "date-button-inactive"
@@ -997,7 +997,7 @@ const Cards = () => {
                     <button
                       key={index}
                       onClick={() => handleTimeSelect(time)}
-                      className={`scree-size w-[133px] md:w-[60px] lg:w-[132px] xl:w=[132px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300  ${
+                      className={`scree-size lg:w-[132px] xl:w=[132px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300  ${
                         activeTime === time
                           ? "bg-gradient-to-r from-[#063828] to-[#002718] text-white font-bold "
                           : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"
@@ -1249,7 +1249,7 @@ const Cards = () => {
                     <button
                       key={index}
                       onClick={() => handleTimeSelect(time)}
-                      className={`scree-size w-[133px] md:w-[60px] lg:w-[132px] xl:w=[132px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300 ${
+                      className={`scree-size lg:w-[132px] xl:w=[132px] hover:translate-y-[-10px] h-[40px] text-[14px] cursor-pointer flex items-center rounded-lg justify-center px-[20px] py-[8px] font-jura font-bold transition duration-300 ${
                         activeTime === time
                           ? "bg-gradient-to-r from-[#063828] to-[#002718] text-[#ccc] font-bold "
                           : "bg-gradient-to-r from-[#c09e5f] to-[#fce6a2] text-[#063828]"

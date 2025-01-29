@@ -245,12 +245,27 @@ a[x-apple-data-detectors],
   }
 }
 
-@media screen and (min-width: 668px) and (max-width: 896px) {
+@media screen  and (max-width: 390px) {
   .scree-size {
-      width: 140px !important;
+      width: 132px !important;
   }
 }
 
+@media screen and (min-width: 391px) and (max-width: 430px) {
+  .scree-size {
+      width: 152px !important;
+  }
+}
+@media screen and (min-width: 821px)  and (max-width: 896px) {
+  .scree-size {
+      width: 125px !important;
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 820px) {
+  .scree-size {
+      width: 96px !important;
+  }
+}
 
 .date-button-active {
   background: linear-gradient(to right, #063828, #002718);
