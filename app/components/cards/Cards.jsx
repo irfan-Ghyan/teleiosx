@@ -358,11 +358,11 @@ const Cards = () => {
         ?.description.split(" ")[0];
   
       if (couponCode) {
-        // If a coupon is selected, apply discount calculation
+
         const newPrice = getPrice(activeCard, duration, couponCode, newCount);
         setCalculatedPrice(newPrice);
       } else {
-        // If no coupon is selected, update bookingDetails instead
+        
         setBookingDetails((prevDetails) =>
           prevDetails.map((detail) =>
             detail.key === "no_of_people"
