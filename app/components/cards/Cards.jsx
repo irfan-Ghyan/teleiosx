@@ -217,20 +217,36 @@ const Cards = () => {
 
       const duration = bookingDetails
         .find((d) => d.key === "duration")
-        ?.description.split(" ")[0]; // e.g., 20, 40, or 60
+        ?.description.split(" ")[0];
       const newPrice = getPrice(activeCard, duration, couponCode, newCount);
-
+      setCalculatedPrice(newPrice);
       setBookingDetails((prevDetails) =>
         prevDetails.map((detail) =>
           detail.key === "no_of_people"
             ? { ...detail, description: newCount.toString() }
             : detail.key === "price"
-            ? { ...detail, description: newPrice.toString() }
+            ? { ...detail,
+              description: getPrice(
+                activeCard,
+                prevDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+                couponCode,
+                newCount
+              ),
+            }
             : detail
-        )
+      )
       );
 
-      setCalculatedPrice(newPrice);
+      
+      if (activeTime && times[activeTime]?.sims < newCount) {
+        setPopupMessage(`Only ${times[activeTime]?.sims || 0} seats are available for the selected time slot.`);
+        setIsPopupVisible(true);
+  
+  
+        setTimeout(() => {
+          setIsPopupVisible(false);
+        }, 3000);
+      }
     } else {
       setPopupMessage("Maximum limit of 14 seats reached.");
       setIsPopupVisible(true);
@@ -248,22 +264,33 @@ const Cards = () => {
 
       const duration = bookingDetails
         .find((d) => d.key === "duration")
-        ?.description.split(" ")[0]; // e.g., 20, 40, or 60
+        ?.description.split(" ")[0]; 
       const newPrice = getPrice(activeCard, duration, couponCode, newCount);
+      setCalculatedPrice(newPrice);
 
       setBookingDetails((prevDetails) =>
         prevDetails.map((detail) =>
           detail.key === "no_of_people"
             ? { ...detail, description: newCount.toString() }
             : detail.key === "price"
-            ? { ...detail, description: newPrice.toString() }
+            ? { ...detail,
+              description: getPrice(
+                activeCard,
+                prevDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
+                couponCode,
+                newCount
+              ),
+            }
             : detail
-        )
-      );
+      )
+    );
 
-      setCalculatedPrice(newPrice);
+      
     }
   };
+
+
+
 
   const handleSeatChange = (newCount) => {
     setBookingDetails((prevDetails) =>
