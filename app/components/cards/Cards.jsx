@@ -944,12 +944,12 @@ const Cards = () => {
           <div className="xl:w-[900px]">
             <div className=" details-card mt-6 w-auto p-5 bg-[#ccc] bg-opacity-10 rounded-lg shadow-md  mb-5 transition-transform transition-shadow duration-300">
               <h3 className="text-[#ccc]"> Select Your Duration</h3>
-              <div className="xl:flex mt-[27px] gap-x-2">
+              <div className="md:flex lg:flex xl:flex mt-[27px] gap-x-2">
                 {Object.keys(priceMapping[activeCard] || {}).map((duration) => (
                   <button
                     key={duration}
                     onClick={() => handleDurationSelect(duration)}
-                    className={`w-full hover:translate-y-[-10px] h-[40px] my-2 xl:my-0 px-[20px] py-[10px] ${
+                    className={`w-full  hover:translate-y-[-10px] h-[40px] my-2 xl:my-0 px-[20px] py-[10px] ${
                       bookingDetails
                         .find((d) => d.key === "duration")
                         ?.description.includes(`${duration}`)
@@ -1193,7 +1193,7 @@ const Cards = () => {
                 <div>
                   <span className="text-[#ccc]">Select Your Duration</span>
                 </div>
-                <div className=" duration xl:flex mt-[27px] gap-x-2">
+                <div className="md:flex lg:flex xl:flex duration mt-[27px] gap-x-2">
                   {Object.keys(priceMapping[activeCard] || {}).map(
                     (duration) => (
                       <button
