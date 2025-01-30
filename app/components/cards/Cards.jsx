@@ -163,8 +163,8 @@ const Cards = () => {
       setCalculatedPrice(newPrice);
     }
 
-    setActiveDate("");
-    setActiveTime("");
+    // setActiveDate("");
+    // setActiveTime("");
   };
 
   const handleDateSelect = (selectedDate) => {
@@ -189,110 +189,6 @@ const Cards = () => {
     );
   };
 
-  const handleDurationSelectVip = (selectedDuration) => {
-    setActiveTime(selectedTime);
-    setBookingDetails((prevDetails) =>
-      prevDetails.map((detail) =>
-        detail.key === "duration"
-          ? { ...detail, description: `${selectedDuration} Mins` }
-          : detail
-      )
-    );
-  };
-
-  const handleDurationSelectSuite = (selectedDuration) => {
-    setBookingDetails((prevDetails) =>
-      prevDetails.map((detail) =>
-        detail.key === "duration"
-          ? { ...detail, description: `${selectedDuration} Mins` }
-          : detail
-      )
-    );
-  };
-
-  // const increaseCount = () => {
-  //   if (count < 14) {
-  //     const newCount = count + 1;
-  //     setCount(newCount);
-
-  //     const duration = bookingDetails
-  //       .find((d) => d.key === "duration")
-  //       ?.description.split(" ")[0];
-
-
-  //     const newPrice = getPrice(activeCard, duration, couponCode, newCount);
-  //     setCalculatedPrice(newPrice);
-
-
-  //     setBookingDetails((prevDetails) =>
-  //       prevDetails.map((detail) =>
-  //         detail.key === "no_of_people"
-  //           ? { ...detail, description: newCount.toString() }
-  //           : detail.key === "price"
-  //           ? { ...detail,
-  //             description: getPrice(
-  //               activeCard,
-  //               prevDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
-  //               couponCode,
-  //               newCount
-  //             ),
-  //           }
-  //           : detail
-  //     )
-  //     );
-
-      
-  //     if (activeTime && times[activeTime]?.sims < newCount) {
-  //       setPopupMessage(`Only ${times[activeTime]?.sims || 0} seats are available for the selected time slot.`);
-  //       setIsPopupVisible(true);
-  
-  
-  //       setTimeout(() => {
-  //         setIsPopupVisible(false);
-  //       }, 3000);
-  //     }
-  //   } else {
-  //     setPopupMessage("Maximum limit of 14 seats reached.");
-  //     setIsPopupVisible(true);
-
-  //     setTimeout(() => {
-  //       setIsPopupVisible(false);
-  //     }, 3000);
-  //   }
-  // };
-
-  // const decreaseCount = () => {
-  //   if (count > 1) {
-  //     const newCount = count - 1;
-  //     setCount(newCount);
-
-  //     const duration = bookingDetails
-  //       .find((d) => d.key === "duration")
-  //       ?.description.split(" ")[0]; 
-
-  //     const newPrice = getPrice(activeCard, duration, couponCode, newCount);
-  //     setCalculatedPrice(newPrice);
-
-  //     setBookingDetails((prevDetails) =>
-  //       prevDetails.map((detail) =>
-  //         detail.key === "no_of_people"
-  //           ? { ...detail, description: newCount.toString() }
-  //           : detail.key === "price"
-  //           ? { ...detail,
-  //             description: getPrice(
-  //               activeCard,
-  //               prevDetails.find((d) => d.key === "duration")?.description.split(" ")[0],
-  //               couponCode,
-  //               newCount
-  //             ),
-  //           }
-  //           : detail
-  //     )
-  //   );
-
-      
-  //   }
-  // };
 
 
   const increaseCount = () => {
